@@ -18,3 +18,9 @@ $ catkin_make
 ```
 This creates the workspace where the project can be executed.
 
+NOTES
+=====
+
+REFERENCES
+==========
+
