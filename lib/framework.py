@@ -6,9 +6,28 @@
 __author__	= "Karan K. Budhraja"
 __email__	= "karanb1@umbc.edu"
 
+# libraries used
+from abc import ABCMeta
+from abc import abstractmethod
+
+# ObjWord constants
 # possible example polarities
-POSITIVE_POLARITY = "+"
-NEGATIVE_POLARITY = "-"
+OW_POSITIVE_POLARITY = "+"
+OW_NEGATIVE_POLARITY = "-"
+# comparison threshold values to consider items as duplicates
+OW_COLOR_DUPLICATE_THRESHOLD = 1
+OW_SHAPE_DUPLICATE_THRESHOLD = 1
+# comparison threshold values to consider items as matched or mismatched
+# this is for classification purposes
+OW_COLOR_POSITIVE_EXAMPLE_THRESHOLD = 0.8
+OW_COLOR_NEGATIVE_EXAMPLE_THRESHOLD = 0.2
+OW_COLOR_CLASSIFICATION_THESHOLD = 0.9
+OW_SHAPE_POSITIVE_EXAMPLE_THRESHOLD = 0.8
+OW_SHAPE_NEGATIVE_EXAMPLE_THRESHOLD = 0.2
+OW_SHAPE_CLASSIFICATION_THESHOLD = 0.9
+
+# JointModel constants
+JM_GUESS_SCORE_THRESHOLD = 0.8
 
 '''
 class created corresponding to classifier for each word
@@ -18,9 +37,12 @@ each object corresponds to examples related to that word. examples may be positi
 '''
 class ObjWord:
 
+	# enable creation of abstract methods
+	__metaclass__ = ABCMeta
+
 	# creating an object corresponding to a new word
 	# word: string
-	# example: image. TODO: duplicate check may not work as is for images 
+	# example: image
 	# example polairty: global definition (constant)
 	def __init__(self, word, example, examplePolarity):
 		self.word = word
@@ -28,21 +50,182 @@ class ObjWord:
 		self.negativeExamples = []
 		self.add_example(example, examplePolarity)
 
+	# each derived class must define its item comparison method
+	# this is used to compare two items on different features
+	# the features are specified by the derived class 
+
+	# compare two items and get a score
+	# item 1: image corresponding to word 
+	# item 2: image corresponding to word
+	@abstractmethod
+	def compare_items(self, item1, item2):
+		pass
+
+	# score for two duplicate items being compared
+	# score varies with comparison method and is therefore class dependent
+	@abstractmethod
+	def get_duplicate_threshold(self):
+		pass
+
+	# score for example compared with positive example
+	# score varies with comparison method and is therefore class dependent
+	@abstractmethod
+	def get_positive_example_threshold(self):
+		pass
+
+	# score for example compared with negative example
+	# score varies with comparison method and is therefore class dependent
+	@abstractmethod
+	def get_negative_example_threshold(self):
+		pass
+
+	# score for classification with example
+	# score varies with comparison method and is therefore class dependent
+	@abstractmethod
+	def get_classification_threshold(self):
+		pass
+
+	# check for duplicates
+	# item 1: image corresponding to word
+	# item 2: image corresponding to word
+	def is_equal(self, item1, item2):
+		if(compare_items(item1, item2) >= self.get_duplicate_threshold()):
+			return True		
+		else:
+			return False
+
+	# each derived class must define its example comparison method
+	# ignore this if duplicate examples are not to be filtered
+	# example: candidate example 
+	# existing examples: list of known examples
+	def is_known_example(self, example, existingExamples):
+		# initial assumption
+		isKnown = False		
+
+		# check for any match
+		# more convoluted but faster this way because no if condition
+		for existingExample in existingExamples:
+			isKnown = isKnown or compare_items(example, existingExample)
+
+		# return answer
+		return isKnown
+
 	# add a new example
-	# example: image. TODO: duplicate check may not work as is for images 
+	# example: image 
 	# example polairty: global definition (constant)
 	def add_example(self, example, examplePolarity):
-		if(examplePolarity == POSITIVE_POLARITY):
+		if(examplePolarity == OW_POSITIVE_POLARITY):
 			# positive example
-			if(example not in positiveExamples):
+			if(is_known_example(example, positiveExamples) == False):
 				self.positiveExamples.append(example)
-		elif(examplePolarity == NEGATIVE_POLARITY):
+		elif(examplePolarity == OW_NEGATIVE_POLARITY):
 			# negative example
-			if(example not in negativeExamples):
+			if(is_known_example(example, negativeExamples) == False):
 				self.negativeExamples.append(example)
 		else:
 			# neither positive nor negative example. ignore
 			pass
+
+	# get classification (probability) score for this classifier based on known examples
+	def calculate_probability_score(self, example):
+
+		# check against this classifier
+		correctExamples = 0
+
+		# check against positive examples
+		for positiveExample in self.positiveExamples:
+			if(self.compare_items(example, positiveExample) > self.get_positive_example_threshold):
+				correctExamples += 1
+
+		# check against negative examples
+		for negativeExample in self.negativeExamples:
+			if(self.compare_items(example, negativeExample) < self.get_negative_example_threshold()):
+				correctExamples += 1
+
+		# compute p(example|word)
+		totalExamples = len(self.positiveExamples) + len(self.negativeExamples)
+		pExampleGivenWord = correctExamples/float(totalExamples)
+
+		# p(word) = totalExamples / examples over all worlds
+		# the denominator is constant for all word scores. ignore it
+		# consider non-normalized version of p(word) to calculate score
+		probabilityScore = pExampleGivenWord*totalExamples
+
+		# return the score
+		return probabilityScore
+
+'''
+initialization: each word may correspond to a color, shape or synonym
+null hypothesis is not a class. it is a conclusion if no class matches
+'''
+class ObjColor(ObjWord):
+	
+	# compare two items in terms of colors and get a score
+	# item 1: image 
+	# item 2: image 
+	def compare_items(self, item1, item2):
+		# TODO: exctract colors from two images and compare them		
+		pass
+
+	# score for two duplicate items being compared
+	# score varies with comparison method and is therefore class dependent
+	def get_duplicate_threshold(self):
+		return OW_COLOR_DUPLICATE_THRESHOLD
+
+	# score for example compared with positive example
+	# score varies with comparison method and is therefore class dependent
+	def get_positive_example_threshold(self):
+		return OW_COLOR_POSITIVE_EXAMPLE_THRESHOLD
+
+	# score for example compared with negative example
+	# score varies with comparison method and is therefore class dependent
+	def get_negative_example_threshold(self):
+		return OW_COLOR_NEGATIVE_EXAMPLE_THRESHOLD
+
+	# score for classification with example
+	# score varies with comparison method and is therefore class dependent
+	@abstractmethod
+	def get_classification_threshold(self):
+		return OW_COLOR_CLASSIFICATION_THESHOLD
+
+class ObjShape(ObjWord):
+
+	# compare two items in terms of shape and get a score
+	# item 1: image 
+	# item 2: image
+	def compare_items(self, item1, item2):
+		# TODO: exctract shapes from two images and compare them		
+		pass
+
+	# score for two duplicate items being compared
+	# score varies with comparison method and is therefore class dependent
+	def get_duplicate_threshold(self):
+		return OW_SHAPE_DUPLICATE_THRESHOLD
+
+	# score for example compared with positive example
+	# score varies with comparison method and is therefore class dependent
+	def get_positive_example_threshold(self):
+		return OW_SHAPE_POSITIVE_EXAMPLE_THRESHOLD
+
+	# score for example compared with negative example
+	# score varies with comparison method and is therefore class dependent
+	def get_negative_example_threshold(self):
+		return OW_SHAPE_NEGATIVE_EXAMPLE_THRESHOLD
+
+	# score for classification with example
+	# score varies with comparison method and is therefore class dependent
+	@abstractmethod
+	def get_classification_threshold(self):
+		return OW_SHAPE_CLASSIFICATION_THESHOLD
+
+class ObjSynonym:
+
+	# creating a word as a synonym for another word
+	# word: string
+	# synonym: string
+	def __init__(self, word, synonym):
+		self.word = word
+		self.synonym = synonym
 
 '''
 joint model class which will contain many word based classifiers
@@ -54,23 +237,74 @@ class JointModel:
 
 	# creating an empty model
 	def __init__(self):
+		# known words and their classifiers
 		self.knownWords = {}
+		self.minimumGuessScore = JM_GUESS_SCORE_THRESHOLD
 
 	# add a word-example pair to the model
 	# word: string
 	# example: image
 	# example polairty: global definition (constant)
-	def add_word(self, word, example, examplePolarity):
+	def add_word_example_pair(self, word, example, examplePolarity):
 		# check if it is a new word
 		if(word not in knownWords.keys()):
-			# new word
-			knownWords[word] = ObjWord(word, example, examplePolarity)
+			# new word. add possibly associated classifiers
+			# limited to initialization
+			knownWords[word] = []
+			knownWords[word].append(ObjColor(word, example, examplePolarity))
+			knownWords[word].append(ObjShape(word, example, examplePolarity))
+
+			# add possibilities of being a synonym
+			# this will not contain redundant information like (a b), (a c) and (b c)
+			# this is because syonyms are added in order
+			for knownWord in knownWords.keys():
+				# word may be a synonym of knownWord
+				# when classifying, synonyms are checked for all classifier types
+				# e.g. color, shape
+				knownWords[word].append(ObjSynonym(word, knownWord))
 		else:
 			# known word. just add the example
-			knownWords[word].add_example(example, examplePolarity)
+			# add in all word objects (where adding an example is possible)			
+			for classifier in knownWords[word]:
+				# assume all non-synonym types to qualify for example addition
+				if(type(classifier) is not ObjSynonym):
+					classifier.add_example(example, examplePolarity)
 
-	# TODO: all of the functions below. what the joint model is used for
-	# currently using a bayesian classifier. not sure if the model in the paper is this simple
+	'''
+	experiment: trained attributes
+	'''	
+	# classify a word with corresponding example and get positive or negative confirmation
+	# if the classifier is confident, then we don't know
+	# e.g. "is this green?"
+	# word: string
+	# example: image
+	# classificationScores: dictionary of classification scores per classifier
+	def classify_word_example(self, word, example, probabilityScores = {}):
+
+		# check all classifiers related to this word
+		for classifier in knownWords[word]:
+			if(type(classifier) is not ObjSynonym):
+				# use non-synonym classifiers directly
+				probabilityScore = classifier.calculate_probability_score(example)
+
+				# add score to classification scores
+				classificationScores[classifier] = probabilityScore
+			else:
+				# use synonym classifiers indirectly
+				classify_word_example(self, classifier.synonym, example, probabilityScores)
+
+		# now we have accumulated all the scores
+		# check if any of the scores exceed the threshold
+		# initially assume inconsistency
+		isWordExampleConsistent = False
+
+		# compare for positive
+		# more convoluted but faster this way because no if condition
+		for classifier in probabilityScores.keys():
+			isWordExampleConsistent = isWordExampleConsistent or (probabilityScores[classifier] >= classifier.get_classification_threshold())
+
+		# return the consistency decision and probability scores
+		return [isWordExampleConsistent, probabilityScores]
 
 	'''
 	experiment: novel scene
@@ -82,87 +316,50 @@ class JointModel:
 	# p(example) is constant across all word classifications and can be ignored when comparing them
     # p(example|cube): the fraction of examples in "cube" which matched the current example
     # p(cube): the fraction of examples under "cube" relative to examples over all known words
+	# p(cube) = totalExamples of cube / total examples of all words
+	# the denominator is constant for all word scores. ignore it
+	# consider non-normalized version of p(cube) to calculate score
 	# example: image
 	def classify_example(self, example):
 
 		# check against each known word
-		pExampleGivenWord = {}
-		pWord = {}
-		wordExampleCount = []
-		wordProbabilityScore = {}
+		wordMaxProabilityScores = {}
+		wordProbabilityScores = {}
+
+		# maintain best guess
+		bestGuessWord = ""
+		bestGuessMaxScore = 0
 
 		# calculate word probability scores
-		totalWordExampleCount = sum(wordExampleCount)
+		# check all associated classifiers
 		for word in knownWords.keys():
-			wordProbabilityScore[word] = classify_word_example(word, example)
+			[isWordExampleConsistent, probabilityScores] = knwonWords[word].calculate_probability_score(example)
+			# select maximum score corresponding to best interpretation			
+			maxScore = max(probabilityScores.values())			
 
-		# sort probability scores in decending order
-		wordProbabilityScores = wordProbabilityScore.values()
-		sortedWordProbabilityScores = sorted(wordProbabilityScores, reverse=True)
+			# add to probability scores
+			wordMaxProabilityScores[word] = maxScore
+			wordProbabilityScores[word] = [isWordExampleConsistent, probabilityScores]
 
-		# reverse map the wordProbabilityScore dictionary
-		probabilityScoreDictionary = {}
-		for word in wordProbabilityScore.keys():		
-			wordProbabilityScoreValue = wordProbabilityScore[word]
+			# update best guess if possible
+			if(maxScore > bestGuessMaxScore):
+				bestGuessWord = word
+				bestGuessMaxScore = maxScore
 
-			# check if already in dictionary
-			if(wordProbabilityScoreValue in probabilityScoreDictionary.keys()):
-				# append to list				
-				probabilityScoreDictionary[wordProbabilityScoreValue].append(word)
-			else:
-				# create a new entry
-				probabilityScoreDictionary[wordProbabilityScoreValue] = [word]
+		# guess confidence
+		# initial assumption
+		isConfidentGuess = False
 
-		# best word is word with highest probability score
-		return probabilityScoreDictionary
+		if(bestGuessMaxScore >= self.minimumGuessScore):
+			isConfidentGuess = True
 
-	'''
-	experiment: trained attributes
-	'''	
-	# classify a word with corresponding example and get positive or negative confirmation
-	# if the classifier is confident, then we don't know
-	# e.g. "is this green?"
-	# word: string
-	# example: image
-	def classify_word_example(self, word, example):
-
-		# check against this word
-		correctExamples = 0
-
-		# TODO: checking against examples will be confidence based using image matching
-		# check against positive examples
-		positiveExamples = knownWords[word].positiveExamples
-		for positiveExample in positiveExamples:
-			if(example == positiveExample):
-				correctExamples += 1
-
-		# check against negative examples
-		negativeExamples = knownWords[word].negativeExamples
-		for negativeExample in negativeExamples:
-			if(example != negativeExample):
-				correctExamples += 1
-
-		# compute p(example|word)
-		pExampleGivenWord = correctExamples/float(totalExamples)
-
-		# calculate pWord
-		totalWordExampleCount = 0
-		for knownWord in knownWords.keys():
-			totalWordExampleCount += len(knownWords[knownWord].positiveExamples) + len(knownWords[knownWord].negativeExamples)
-
-		pWord = (len(knownWords[word].positiveExamples) + len(knownWords[word].negativeExamples)) / float(totalWordExampleCount)
-
-		# calculate word probability score
-		wordProbabilityScore = pExampleGivenWord*pWord
-
-		# TODO: are we confident about this score?
-
-		# return the score. used by other functions
-		return wordProbabilityScore
+		# return everything known to man
+		return [bestGuessWord, isConfidentGuess, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores]
 
 	'''
 	experiment: novel english
 	'''	
+	# TODO
 	def classify_word(self, word):
 		pass
 
@@ -172,9 +369,5 @@ main function
 def main():
 	
 	pass
-
-
-
-
 
 main()
