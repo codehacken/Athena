@@ -30,11 +30,9 @@ This will start Gazebo with the kinect_world environment.
 NOTES
 =====
 List of useful links:
-```
 1. [ROS-Husky Interface](http://www.clearpathrobotics.com/2014/03/ros-101-drive-husky/)
 2. [Simulate Husky in Gazebo](http://www.clearpathrobotics.com/2013/11/husky-simulation-in-gazebo/)
 3. [ROS-Gazebo Interface](http://www.generationrobots.com/en/content/75-gazebo-and-ros)
-```
 
 REFERENCES
 ==========
