@@ -1,6 +1,6 @@
 <launch>	  
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="world_name" value="$(find jaco_kinect_gazebo)/worlds/gazebo_simulation.world"/>
+		<arg name="world_name" value="$(find jaco_kinect_gazebo)/worlds/kinect.world"/>
 		<arg name="gui" value="true"/>
 	</include>
 </launch>
