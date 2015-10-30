@@ -42,8 +42,23 @@ NOTES
 
 2. https://github.com/OpenKinect/libfreenect2
 
-REFERENCES
+## OpenCV (use package vision_opencv)
+1. http://docs.opencv.org/2.4/doc/tutorials/introduction/linux_install/linux_install.html
+
+2. http://wiki.ros.org/vision_opencv
+
+3. http://codeyarns.com/2013/07/23/how-to-compile-opencv-without-cuda-support/
+
+Compile openCV with the following command:
+```
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D BUILD_NEW_PYTHON_SUPPORT=ON -D WITH_CUDA=OFF -D CMAKE_INSTALL_PREFIX=/usr/local ..
+```
+
+Important Note: Use opencv 2.4 instead of 3.0 as cv_bridge on iai_kinect2 is incompatible with it (for now).
+
+REFERENCE
 ==========
 ```
 1. Matuszek, Cynthia, et al. "A joint model of language and perception for grounded attribute learning." arXiv preprint arXiv:1206.6423 (2012).
 ```
+
