@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-import roslib
-import sys
+# AUTHOR: Ashwinkumar Ganesan.
+# This is the ROS Node which acts the robots inout sensor. The input
+# is specifically from a keyboard given through stdin.
+
 import rospy
-#import cv2
 from std_msgs.msg import String
-from sensor_msgs.msg import Image
-from cv_bridge import CvBridge, CvBridgeError
 
 class ImageConverter:
     def __init__(self):
