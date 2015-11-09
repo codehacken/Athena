@@ -127,23 +127,29 @@ class ObjWord:
 			pass
 
 	# get classification (probability) score for this classifier based on known examples
-	def calculate_probability_score(self, example):
+	def calculate_probability_score(self, example, additionalPositiveExamples=[], additionalNegatveExamples=[]):
+
+		# add additional positive examples if any
+		positiveExamples = self.positiveExamples + additionalPositiveExamples
+	
+		# add additional negative examples if any
+		negatveExamples = self.negativeExamples + additionalNegatveExamples
 
 		# check against this classifier
 		correctExamples = 0
 
 		# check against positive examples
-		for positiveExample in self.positiveExamples:
+		for positiveExample in positiveExamples:
 			if(self.compare_items(example, positiveExample) > self.get_positive_example_threshold):
 				correctExamples += 1
 
 		# check against negative examples
-		for negativeExample in self.negativeExamples:
+		for negativeExample in negativeExamples:
 			if(self.compare_items(example, negativeExample) < self.get_negative_example_threshold()):
 				correctExamples += 1
 
 		# compute p(example|word)
-		totalExamples = len(self.positiveExamples) + len(self.negativeExamples)
+		totalExamples = len(positiveExamples) + len(negativeExamples)
 		pExampleGivenWord = correctExamples/float(totalExamples)
 
 		# p(word) = totalExamples / examples over all worlds
@@ -184,7 +190,6 @@ class ObjColor(ObjWord):
 
 	# score for classification with example
 	# score varies with comparison method and is therefore class dependent
-	@abstractmethod
 	def get_classification_threshold(self):
 		return OW_COLOR_CLASSIFICATION_THESHOLD
 
@@ -214,18 +219,39 @@ class ObjShape(ObjWord):
 
 	# score for classification with example
 	# score varies with comparison method and is therefore class dependent
-	@abstractmethod
 	def get_classification_threshold(self):
 		return OW_SHAPE_CLASSIFICATION_THESHOLD
 
-class ObjSynonym:
+class ObjSynonym(ObjWord):
+
+	# re-uses some of ObjWord but not as much as Color and Shape do
+	# only re-uses example addition code
 
 	# creating a word as a synonym for another word
 	# word: string
 	# synonym: string
-	def __init__(self, word, synonym):
+	# we do not use the other constructor
+	# try to use @override
+	def __init__(self, word, synonym, example, examplePolarity):
 		self.word = word
 		self.synonym = synonym
+		self.positiveExamples = []
+		self.negativeExamples = []
+		self.add_example(example, examplePolarity)
+
+	# dummy implementations of abstract methods
+	# needed to instantiate ObjSynonym
+	# not used by ObjSynonym objects
+	def compare_items(self, item1, item2):
+		pass
+	def get_duplicate_threshold(self):
+		pass
+	def get_positive_example_threshold(self):
+		pass
+	def get_negative_example_threshold(self):
+		pass
+	def get_classification_threshold(self):
+		pass
 
 '''
 joint model class which will contain many word based classifiers
@@ -261,37 +287,39 @@ class JointModel:
 				# word may be a synonym of knownWord
 				# when classifying, synonyms are checked for all classifier types
 				# e.g. color, shape
-				knownWords[word].append(ObjSynonym(word, knownWord))
+				knownWords[word].append(ObjSynonym(word, knownWord, example, examplePolarity))
 		else:
 			# known word. just add the example
 			# add in all word objects (where adding an example is possible)			
 			for classifier in knownWords[word]:
-				# assume all non-synonym types to qualify for example addition
-				if(type(classifier) is not ObjSynonym):
-					classifier.add_example(example, examplePolarity)
+				# assume all types to qualify for example addition
+				classifier.add_example(example, examplePolarity)
 
 	'''
 	experiment: trained attributes
-	'''	
+	'''
 	# classify a word with corresponding example and get positive or negative confirmation
 	# if the classifier is confident, then we don't know
 	# e.g. "is this green?"
 	# word: string
 	# example: image
 	# classificationScores: dictionary of classification scores per classifier
-	def classify_word_example(self, word, example, probabilityScores = {}):
+	def classify_word_example(self, word, example, probabilityScores = {}, additionalPositiveExamples=[], additionalNegatveExamples=[]):
 
 		# check all classifiers related to this word
 		for classifier in knownWords[word]:
 			if(type(classifier) is not ObjSynonym):
 				# use non-synonym classifiers directly
-				probabilityScore = classifier.calculate_probability_score(example)
+				probabilityScore = classifier.calculate_probability_score(example, additionalPositiveExamples, additionalNegatveExamples)
 
 				# add score to classification scores
 				classificationScores[classifier] = probabilityScore
 			else:
 				# use synonym classifiers indirectly
-				classify_word_example(self, classifier.synonym, example, probabilityScores)
+				# add positive and negative examples known for the word but not the synonym
+				# we do not care about the return values for recursive calls
+				# we only want to populate probabilityScores in each recursion
+				classify_word_example(classifier.synonym, example, probabilityScores, classifier.positiveExamples, classifier.negativeExamples)
 
 		# now we have accumulated all the scores
 		# check if any of the scores exceed the threshold
@@ -333,7 +361,7 @@ class JointModel:
 		# calculate word probability scores
 		# check all associated classifiers
 		for word in knownWords.keys():
-			[isWordExampleConsistent, probabilityScores] = knwonWords[word].calculate_probability_score(example)
+			[isWordExampleConsistent, probabilityScores] = knwonWords[word].classify_word_example(word, example)
 			# select maximum score corresponding to best interpretation			
 			maxScore = max(probabilityScores.values())			
 
