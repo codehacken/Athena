@@ -89,3 +89,9 @@ def findMinMaxOfPixels(pixNp):
 def findUniquePixels(pixNp):
    pixNp = set(map(tuple,pixNp))
    return pixNp
+
+def compare_items(pix1, pix2):
+   inter = pix1.intersection(pix2)
+   equalRate = float(len(pix1) - len(inter))/float(len(pix1))
+   print "Color is compared : ", equalRate
+

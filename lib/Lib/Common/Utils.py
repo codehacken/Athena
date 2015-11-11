@@ -12,6 +12,7 @@
 
 import cv2
 
+objectAttributes = []
 
 def imageRead(imageFile):
    image = cv2.imread(imageFile)
@@ -46,16 +47,19 @@ def selectContour(imageFile,contours):
 
    while True:
       try:
-         contNo  = int(input("Please enter The object Identification No: "))
+         contNo  = raw_input("Please enter The object Identification No: ")
+         if not contNo.strip():
+            continue
+         contNo = int(contNo)
       except ValueError:
          print("Sorry, I didn't understand that.")
          continue
       if contNo < 0:
          print("Sorry, your response must not be negative.")
          continue
-      else:
-         break
-
+      else :
+         break   
+   
    return contNo
 
 def boundingRectangle(contour):
@@ -82,3 +86,15 @@ def objectIdentification(imageFile) :
    return cnt
 
  
+def addColorShapeAttributes(cnt,pixels) :
+   attr = {'color' : pixels, 'shape' : cnt}
+   objectAttributes.append(attr)
+
+
+def displayColorShapeAttributes():
+   for obj in objectAttributes:
+      print obj
+
+def getColorShapeAttributes() :
+   return objectAttributes
+
