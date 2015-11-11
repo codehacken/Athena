@@ -37,7 +37,7 @@ class LanguageModule:
          for i in self.tokenized[:5]:
              words = nltk.word_tokenize(i)
              tagged = nltk.pos_tag(words)
-             print tagged
+       #      print tagged
              for rule in RuleList:
 	         parser=nltk.RegexpParser(rule)
                  result = parser.parse(tagged)
@@ -52,29 +52,17 @@ class LanguageModule:
              and item[0] not in ['color', 'three','dimensional','solid','called',
                                  'figure','geometric','picture','depicts','surface'
                                   ,'equal','length','shape']]
-     print keyword
-    # newlist=[]
-     #i=0
-     #for word in keyword:
-         #if word[0] in ['not','Not']:
-     #     newlist[i].insert(word)
-     #     i=i+1
-     #for values in newlist:
-     #    print newlist.index(values)
      negative_adverbs=[keyword[keyword.index(word)+1][0] for word in keyword if word[0] in ['not','Not']]
      negative_nouns= [keyword[keyword.index(word)+2][0] for word in keyword if word[0] in ['not','Not'] 
                       and keyword[keyword.index(word)+2][1] in ['NN'] ]
      negative_examples=negative_adverbs+negative_nouns
-     #print negative_examples
-     #print negative_adverbs
-     #print negative_nouns
      positive_examples=[positive_word for positive_word in keyword if  positive_word[0] not in [item1 for item1 in negative_examples]]
      positive_examples=[positive_example[0] for positive_example in positive_examples 
                         if positive_example[0] not in['not','Not','a','the'] and positive_example[1] not in ['DT']]
      positive_examples = list(set(positive_examples))
      negative_examples = list(set(negative_examples))
-      
-     print(positive_examples) 
-     print(negative_examples)
-obj=LanguageModule("This is blue. it is not green not ")
-obj.process_content()
+     
+     return_data=[positive_examples,negative_examples]
+     return return_data 
+     #print(positive_examples) 
+     #print(negative_examples)
