@@ -13,7 +13,7 @@ import LanguageModule
 
 # write the main processing node for the model
 # a joint model object is maintained in the main cpu loop
-# later, a language model will also be maintained in main cpu loop 
+# later, a language model will also be maintained  
 def process_model(cv_image, message, jointModelObject):
     print("Process Model: " + message)
 

@@ -9,8 +9,8 @@ __email__	= "karanb1@umbc.edu"
 # libraries used
 from abc import ABCMeta
 from abc import abstractmethod
-from lib.Color import detectColor as dc
-from lib.Shape import shapeUtils as su
+from Lib.Color import detectColor as dc
+from Lib.Shape import ShapeUtils as su
 
 # ObjWord constants
 # possible example polarities
