@@ -9,6 +9,8 @@ __email__	= "karanb1@umbc.edu"
 # libraries used
 from abc import ABCMeta
 from abc import abstractmethod
+from Lib.Color import detectColor as dc
+from Lib.Shape import ShapeUtils as su
 
 # ObjWord constants
 # possible example polarities
@@ -105,7 +107,7 @@ class ObjWord:
 		# check for any match
 		# more convoluted but faster this way because no if condition
 		for existingExample in existingExamples:
-			isKnown = isKnown or compare_items(example, existingExample)
+			isKnown = isKnown or is_equal(example, existingExample)
 
 		# return answer
 		return isKnown
@@ -170,8 +172,8 @@ class ObjColor(ObjWord):
 	# item 1: image 
 	# item 2: image 
 	def compare_items(self, item1, item2):
-		# TODO: exctract colors from two images and compare them		
-		pass
+		# exctract colors from two images and compare them		
+		dc.compare_items(item1['shape'], item2['shape'])
 
 	# score for two duplicate items being compared
 	# score varies with comparison method and is therefore class dependent
@@ -199,8 +201,8 @@ class ObjShape(ObjWord):
 	# item 1: image 
 	# item 2: image
 	def compare_items(self, item1, item2):
-		# TODO: exctract shapes from two images and compare them		
-		pass
+		# exctract shapes from two images and compare them		
+		su.compare_items(item1['shape'], item2['shape'])
 
 	# score for two duplicate items being compared
 	# score varies with comparison method and is therefore class dependent
