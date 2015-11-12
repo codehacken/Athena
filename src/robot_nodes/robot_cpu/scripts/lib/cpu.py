@@ -8,6 +8,7 @@ AUTHOR: Ashwinkumar Ganesan.
 import rospy
 from std_msgs.msg import Int32, String
 from process import process_model
+from lib.framework import JointModel
 
 class CPU:
     def __init__(self, ic):
@@ -23,6 +24,7 @@ class CPU:
         # Get Keyboard inputs.
         self._input_sub = rospy.Subscriber("/robot/messages", String, self._store_message)
         self._message = ""
+        self._joint_model = JointModel()
 
     # Helper functions.
     def _do_process(self, command):
@@ -36,4 +38,5 @@ class CPU:
 
     def _process_model(self):
         # Given the function and input of image and keyboard.
-        process_model(self._ic.get_image(), self._message)
+        process_model(self._ic.get_image(), self._message, self._joint_model)
+

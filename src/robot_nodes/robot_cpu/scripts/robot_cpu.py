@@ -8,7 +8,7 @@ AUTHOR: Ashwinkumar Ganesan.
 
 # ROS.
 import rospy
-from lib.image import ImageConverter
+from lib.kinect import ImageConverter
 from lib.cpu import CPU
 
 def listener():
