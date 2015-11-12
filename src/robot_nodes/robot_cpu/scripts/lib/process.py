@@ -4,9 +4,9 @@ AUTHOR: Ashwinkumar Ganesan, Karan K. Budhraja, Nisha Pillai, Gurpreet Singh.
 """
 
 # import image processing library
-from lib.common import utils
-from lib.color import detectColor as dc
-from lib.shape import shapeUtils as su
+from imagelib.common import utils
+from imagelib.color import detectColor as dc
+from imagelib.shape import shapeUtils as su
 
 # import language processing library
 import LanguageModule
@@ -42,7 +42,8 @@ def process_model(cv_image, message, jointModelObject):
 	# for each keyword
 	# add keyword, image pair to joint model
 	for keyword in positiveLanguageData:
-		jointModelObject.add_word_example_pair(word, imageData, "+")
+		jointModelObject.add_word_example_pair(keyword, imageData, "+")
+	
 	for keyword in negativeLanguageData:
-		jointModelObject.add_word_example_pair(word, imageData, "-")
+		jointModelObject.add_word_example_pair(keyword, imageData, "-")
 
