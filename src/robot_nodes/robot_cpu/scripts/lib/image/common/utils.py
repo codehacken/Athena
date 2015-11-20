@@ -11,12 +11,11 @@
 ########################################################
 
 import cv2
-
+import numpy as np
 objectAttributes = []
 
 def imageRead(imageFile):
-   #image = cv2.imread(imageFile)
-   image = imageFile
+   image = cv2.imread(imageFile)
    return image
 
 def killWindows() :
@@ -67,16 +66,16 @@ def boundingRectangle(contour):
    x,y,w,h = cv2.boundingRect(contour)
    return (x,y,w,h)
 
-def drawRectangle(imageFile,cnt) :
-   im = imageRead(imageFile)
+def drawRectangle(image,cnt) :
+   im = image
    x,y,w,h = boundingRectangle(cnt)
    img = cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,255),2)
-   cv2.imshow("Object Selection ",im)
+   cv2.imshow("Contour",im)
    cv2.waitKey(0)
    killWindows()
+   return im
 
-
-def objectIdentification(imageFile) :
+def objectIdentification1(imageFile) :
    image = imageRead(imageFile)
    imgray = colorToGray(image)
    thresh = threshChange(imgray)
@@ -86,7 +85,55 @@ def objectIdentification(imageFile) :
    drawRectangle(imageFile,cnt) 
    return cnt
 
- 
+def draw_contour(image, c, i):
+        # compute the center of the contour area and draw a circle
+        # representing the center
+        M = cv2.moments(c)
+#       cX = int(M["m10"] / M["m00"])
+#       cY = int(M["m01"] / M["m00"])
+
+        # draw the countour number on the image
+#       cv2.putText(image, "#{}".format(i + 1), (cX - 20, cY), cv2.FONT_HERSHEY_SIMPLEX,
+#               1.0, (255, 255, 255), 2)
+
+        # return the image with the contour number drawn on it
+        image = drawRectangle(image,c)
+
+        return image
+
+def objectIdentification(imageFile) :
+   image = imageRead(imageFile) 
+   accumEdged = np.zeros(image.shape[:2], dtype="uint8")
+   # loop over the blue, green, and red channels, respectively
+   for chan in cv2.split(image):
+        # blur the channel, extract edges from it, and accumulate the set
+        # of edges for the image
+        chan = cv2.medianBlur(chan, 11)
+        edged = cv2.Canny(chan, 50, 200)
+        accumEdged = cv2.bitwise_or(accumEdged, edged)
+# show the accumulated edge map
+   cv2.imshow("Edge Map", accumEdged)
+   # find contours in the accumulated image, keeping only the largest
+   # ones
+   (cnts, _) = cv2.findContours(accumEdged.copy(), cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
+   orig = image.copy()
+
+   print len(cnts)
+   newC  = cnts[0]
+   oldArea = 0.0
+   for c in cnts : 
+      area = cv2.contourArea(c)
+      print "Area",area
+      if area > oldArea :
+         newC = c
+     
+   orig = draw_contour(orig, newC, 1)
+
+   # show the original, unsorted contour image
+   cv2.imshow("Unsorted", orig)
+   return newC
+
 def addColorShapeAttributes(cnt,pixels) :
    attr = {'color' : pixels, 'shape' : cnt}
    objectAttributes.append(attr)
@@ -98,4 +145,3 @@ def displayColorShapeAttributes():
 
 def getColorShapeAttributes() :
    return objectAttributes
-
