@@ -27,7 +27,7 @@ def process_model(cv_image, message, jointModelObject):
     # image_copy = copy.copy(image)
     cnt = utils.objectIdentification(cv_image)
     [x, y, w, h] = utils.boundingRectangle(cnt)
-    pixNp = dc.findAllPixels(image_copy, cnt, x, y, w, h)
+    pixNp = dc.findAllPixels(image, cnt, x, y, w, h)
     pixNp = dc.findUniquePixels(pixNp)
 
     # store image data as dictionary
@@ -46,3 +46,14 @@ def process_model(cv_image, message, jointModelObject):
 
     for keyword in negativeLanguageData:
         jointModelObject.add_word_example_pair(keyword, imageData, "-")
+
+    # This is temporary code.
+    #print(dir(jointModelObject))
+    #print(jointModelObject.knownWords)
+
+    #a = jointModelObject.classify_word_example('red', imageData)
+    #print(a)
+
+    #a = jointModelObject.classify_example(imageData)
+    #print(a)
+

@@ -15,8 +15,8 @@ import numpy as np
 objectAttributes = []
 
 def imageRead(imageFile):
-   image = cv2.imread(imageFile)
-   return image
+   #image = cv2.imread(imageFile)
+   return imageFile
 
 def killWindows() :
    cv2.destroyAllWindows()
@@ -41,9 +41,9 @@ def selectContour(imageFile,contours):
       im = imageRead(imageFile)
       cv2.drawContours(im, contours, index, (0,255,0), 3)
       cnt = contours[index]
-      cv2.imshow("Contour",im)
-      cv2.waitKey(0)
-      killWindows()
+      # cv2.imshow("Contour",im)
+      # cv2.waitKey(0)
+      # killWindows()
 
    while True:
       try:
@@ -70,9 +70,9 @@ def drawRectangle(image,cnt) :
    im = image
    x,y,w,h = boundingRectangle(cnt)
    img = cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,255),2)
-   cv2.imshow("Contour",im)
-   cv2.waitKey(0)
-   killWindows()
+   # cv2.imshow("Contour",im)
+   # cv2.waitKey(0)
+   # killWindows()
    return im
 
 def objectIdentification1(imageFile) :
@@ -112,7 +112,7 @@ def objectIdentification(imageFile) :
         edged = cv2.Canny(chan, 50, 200)
         accumEdged = cv2.bitwise_or(accumEdged, edged)
 # show the accumulated edge map
-   cv2.imshow("Edge Map", accumEdged)
+   # cv2.imshow("Edge Map", accumEdged)
    # find contours in the accumulated image, keeping only the largest
    # ones
    (cnts, _) = cv2.findContours(accumEdged.copy(), cv2.RETR_EXTERNAL,
@@ -131,7 +131,7 @@ def objectIdentification(imageFile) :
    orig = draw_contour(orig, newC, 1)
 
    # show the original, unsorted contour image
-   cv2.imshow("Unsorted", orig)
+   # cv2.imshow("Unsorted", orig)
    return newC
 
 def addColorShapeAttributes(cnt,pixels) :

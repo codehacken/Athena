@@ -91,7 +91,9 @@ def findUniquePixels(pixNp):
    return pixNp
 
 def compare_items(pix1, pix2):
+   #print(dir(pix1))
    inter = pix1.intersection(pix2)
+   #print(inter)
    equalRate = float(len(pix1) - len(inter))/float(len(pix1))
    print "Color is compared : ", equalRate
 

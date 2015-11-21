@@ -5,7 +5,7 @@ from nltk.chunk.regexp import RegexpChunkRule
 class LanguageModule:
   tokenized=[]
   def __init__(self,sentence):
-     f = open('training_data', 'r')
+     f = open('data/training_data', 'r')
      train_text=f.read()
      #data=open('data2','r')
      #test_data=data.read()
