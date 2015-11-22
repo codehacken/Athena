@@ -203,7 +203,7 @@ class ObjShape(ObjWord):
 	def compare_items(self, item1, item2):
 		# exctract shapes from two images and compare them		
 		su.compare_items(item1['shape'], item2['shape'])
-
+		
 	# score for two duplicate items being compared
 	# score varies with comparison method and is therefore class dependent
 	def get_duplicate_threshold(self):
@@ -224,7 +224,38 @@ class ObjShape(ObjWord):
 	def get_classification_threshold(self):
 		return OW_SHAPE_CLASSIFICATION_THESHOLD
 
-class ObjSynonym(ObjWord):
+class ObjSynonymColor(ObjWord):
+
+	# re-uses some of ObjWord but not as much as Color and Shape do
+	# only re-uses example addition code
+
+	# creating a word as a synonym for another word
+	# word: string
+	# synonym: string
+	# we do not use the other constructor
+	# try to use @override
+	def __init__(self, word, synonym, example, examplePolarity):
+		self.word = word
+		self.synonym = synonym
+		self.positiveExamples = []
+		self.negativeExamples = []
+		self.add_example(example, examplePolarity)
+
+	# dummy implementations of abstract methods
+	# needed to instantiate ObjSynonym
+	# not used by ObjSynonym objects
+	def compare_items(self, item1, item2):
+		pass
+	def get_duplicate_threshold(self):
+		pass
+	def get_positive_example_threshold(self):
+		pass
+	def get_negative_example_threshold(self):
+		pass
+	def get_classification_threshold(self):
+		pass
+
+class ObjSynonymShape(ObjWord):
 
 	# re-uses some of ObjWord but not as much as Color and Shape do
 	# only re-uses example addition code
@@ -290,7 +321,8 @@ class JointModel:
 				# word may be a synonym of knownWord
 				# when classifying, synonyms are checked for all classifier types
 				# e.g. color, shape
-				self.knownWords[word].append(ObjSynonym(word, knownWord, example, examplePolarity))
+				self.knownWords[word].append(ObjSynonymColor(word, knownWord, example, examplePolarity))
+				self.knownWords[word].append(ObjSynonymShape(word, knownWord, example, examplePolarity))
 		else:
 			# known word. just add the example
 			# add in all word objects (where adding an example is possible)			
@@ -307,22 +339,40 @@ class JointModel:
 	# word: string
 	# example: image
 	# classificationScores: dictionary of classification scores per classifier
-	def classify_word_example(self, word, example, probabilityScores = {}, additionalPositiveExamples=[], additionalNegatveExamples=[]):
+	def classify_word_example(self, word, example):
+
+		probabilityScores = {}
 
 		# check all classifiers related to this word
 		for classifier in self.knownWords[word]:
-			if(type(classifier) is not ObjSynonym):
+			if("Synonym" not in str(type(classifier))):
 				# use non-synonym classifiers directly
-				probabilityScore = classifier.calculate_probability_score(example, additionalPositiveExamples, additionalNegatveExamples)
-
-				# add score to classification scores
-				probabilityScores[classifier] = probabilityScore
+				probabilityScore = classifier.calculate_probability_score(example)
 			else:
 				# use synonym classifiers indirectly
 				# add positive and negative examples known for the word but not the synonym
 				# we do not care about the return values for recursive calls
 				# we only want to populate probabilityScores in each recursion
-				self.classify_word_example(classifier.synonym, example, probabilityScores, classifier.positiveExamples, classifier.negativeExamples)
+	
+				if("Color" in str(type(classifier))):
+					searchType = "ObjColor"					
+				elif("Shape" in str(type(classifier))):
+					searchType = "ObjShape"					
+				else:
+					# should never come here for given initialization
+					pass
+
+				for synonymClassifier in self.knownWords[classifier.synonym]:
+					if(searchType in str(type(synonymClassifier))):
+						# will only enter this once
+						# break is efficient but not neccessary
+						synonymClassifierObj = synonymClassifier
+						break;
+
+				probabilityScore = synonymClassifierObj.calculate_probability_score(example, classifier.positiveExamples, classifier.negativeExamples)
+			
+			# add score to classification scores
+			probabilityScores[classifier] = probabilityScore
 
 		# now we have accumulated all the scores
 		# check if any of the scores exceed the threshold
@@ -345,8 +395,8 @@ class JointModel:
 	# e.g. "what is this?"
 	# e.g. of bayes' rule: p(cube|example) = p(example|cube) * p(cube) / p(example)
 	# p(example) is constant across all word classifications and can be ignored when comparing them
-    	# p(example|cube): the fraction of examples in "cube" which matched the current example
-    	# p(cube): the fraction of examples under "cube" relative to examples over all known words
+    # p(example|cube): the fraction of examples in "cube" which matched the current example
+    # p(cube): the fraction of examples under "cube" relative to examples over all known words
 	# p(cube) = totalExamples of cube / total examples of all words
 	# the denominator is constant for all word scores. ignore it
 	# consider non-normalized version of p(cube) to calculate score
@@ -354,17 +404,20 @@ class JointModel:
 	def classify_example(self, example):
 
 		# check against each known word
+		# maximum probability score data corresponding to a word		
 		wordMaxProabilityScores = {}
+		# all probability score data corresponding to a word
 		wordProbabilityScores = {}
 
 		# maintain best guess
 		bestGuessWord = ""
 		bestGuessMaxScore = 0
-
+	
 		# calculate word probability scores
 		# check all associated classifiers
 		for word in self.knownWords.keys():
-			[isWordExampleConsistent, probabilityScores] = self.knwonWords[word].classify_word_example(word, example)
+			[isWordExampleConsistent, probabilityScores] = self.classify_word_example(word, example)
+
 			# select maximum score corresponding to best interpretation			
 			maxScore = max(probabilityScores.values())			
 
@@ -383,7 +436,7 @@ class JointModel:
 
 		if(bestGuessMaxScore >= self.minimumGuessScore):
 			isConfidentGuess = True
-
+		
 		# return everything known to man
 		return [bestGuessWord, isConfidentGuess, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores]
 		
