@@ -23,10 +23,10 @@ OW_SHAPE_DUPLICATE_THRESHOLD = 1
 # this is for classification purposes
 OW_COLOR_POSITIVE_EXAMPLE_THRESHOLD = 0.8
 OW_COLOR_NEGATIVE_EXAMPLE_THRESHOLD = 0.2
-OW_COLOR_CLASSIFICATION_THESHOLD = 0.9
+OW_COLOR_CLASSIFICATION_THRESHOLD = 0.9
 OW_SHAPE_POSITIVE_EXAMPLE_THRESHOLD = 0.8
 OW_SHAPE_NEGATIVE_EXAMPLE_THRESHOLD = 0.2
-OW_SHAPE_CLASSIFICATION_THESHOLD = 0.9
+OW_SHAPE_CLASSIFICATION_THRESHOLD = 0.9
 
 # JointModel constants
 JM_GUESS_SCORE_THRESHOLD = 0.8
@@ -193,7 +193,7 @@ class ObjColor(ObjWord):
 	# score for classification with example
 	# score varies with comparison method and is therefore class dependent
 	def get_classification_threshold(self):
-		return OW_COLOR_CLASSIFICATION_THESHOLD
+		return OW_COLOR_CLASSIFICATION_THRESHOLD
 
 class ObjShape(ObjWord):
 
@@ -222,7 +222,7 @@ class ObjShape(ObjWord):
 	# score for classification with example
 	# score varies with comparison method and is therefore class dependent
 	def get_classification_threshold(self):
-		return OW_SHAPE_CLASSIFICATION_THESHOLD
+		return OW_SHAPE_CLASSIFICATION_THRESHOLD
 
 class ObjSynonymColor(ObjWord):
 

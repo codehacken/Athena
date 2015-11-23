@@ -11,10 +11,17 @@ from lib.image.shape import shapeUtils as su
 # import language processing library
 from lib.lang.nlp import LanguageModule as lm
 
+# This is to initialize the joint model
+# either with a precomputed model or by computing it in the function.
+def initialize_model():
+    # Write all initializations here.
+    # The returned value is a joint model.
+    return None
+
 # write the main processing node for the model
 # a joint model object is maintained in the main cpu loop
 # later, a language model will also be maintained in main cpu loop
-def process_model(cv_image, message, jointModelObject):
+def process_model(cv_image, message, jointModelObject, print_message):
     print("Process Model: " + message)
     # convert cv image into processing format
     # TODO: this needs to be corrected
@@ -47,13 +54,18 @@ def process_model(cv_image, message, jointModelObject):
     for keyword in negativeLanguageData:
         jointModelObject.add_word_example_pair(keyword, imageData, "-")
 
+    # Call print message to publish the message to the output node.
+    # print_message(message)
+
     # This is temporary code.
-    #print(dir(jointModelObject))
-    #print(jointModelObject.knownWords)
+    """
+    print(dir(jointModelObject))
+    print(jointModelObject.knownWords)
 
-    #a = jointModelObject.classify_word_example('red', imageData)
-    #print(a)
+    a = jointModelObject.classify_word_example('red', imageData)
+    print(a)
 
-    #a = jointModelObject.classify_example(imageData)
-    #print(a)
+    a = jointModelObject.classify_example(imageData)
+    print(a)
+    """
 

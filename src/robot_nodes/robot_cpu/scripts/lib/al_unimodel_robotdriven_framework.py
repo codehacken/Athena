@@ -2,7 +2,7 @@
 @Description: This code attempts to model the active learning architecture which extends the joint architecture model presented in A Joint Model of Language and Perception for Grounded Attribute Learning
                           Referer to http://cynthia.matuszek.org/Pubs/MatuszekICML2012.pdf, http://cynthia.matuszek.org/Slides/MatuszekFutureOfHRIWorkshopICRA2012.pdf
 
-This code is extended/modified from Joint Architecture deveoped by Karan Budhraja
+This code is extended/modified from Joint Architecture developed by Karan Budhraja
 '''
 
 __author__      = "Nisha Pillai"
@@ -25,7 +25,7 @@ OW_SHAPE_DUPLICATE_THRESHOLD = 1
 # this is for classification purposes
 OW_COLOR_POSITIVE_EXAMPLE_THRESHOLD = 0.8
 OW_COLOR_NEGATIVE_EXAMPLE_THRESHOLD = 0.2
-OW_COLOR_CLASSIFICATION_THESHOLD = 0.9
+OW_COLOR_CLASSIFICATION_THRESHOLD = 0.9
 OW_SHAPE_POSITIVE_EXAMPLE_THRESHOLD = 0.8
 OW_SHAPE_NEGATIVE_EXAMPLE_THRESHOLD = 0.2
 OW_SHAPE_CLASSIFICATION_THESHOLD = 0.9
@@ -199,7 +199,7 @@ class ObjColor(ObjWord):
 	# score for classification with example
 	# score varies with comparison method and is therefore class dependent
 	def get_classification_threshold(self):
-		return OW_COLOR_CLASSIFICATION_THESHOLD
+		return OW_COLOR_CLASSIFICATION_THRESHOLD
 
 class ObjShape(ObjWord):
 
@@ -385,7 +385,7 @@ class ALUniRobotDrivenModel:
                     word1 = self.wordInQuestion
                     self.synCandidates.remove(word1)
 
-                    if len(self.synCandidates) == 0 
+                    if len(self.synCandidates) == 0:
                        self.questionFlag = 0
                        self.synCandidates = []
                        self.wordInQuestion = ""
@@ -394,7 +394,7 @@ class ALUniRobotDrivenModel:
                        self.questionFlag = 2
                        word2 = self.synCandidates.pop()
                        self.wordInQuestion = word2
-                       sentenceInReturn =  AL_QUESTIONNAIRE[2] + word2 + " ? "                      
+                       sentenceInReturn =  AL_QUESTIONNAIRE[2] + word2 + " ? "
 
                  return sentenceInReturn
 
