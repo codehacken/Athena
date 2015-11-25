@@ -21,7 +21,7 @@ def initialize_model():
 # write the main processing node for the model
 # a joint model object is maintained in the main cpu loop
 # later, a language model will also be maintained in main cpu loop
-def process_model(cv_image, message, jointModelObject, print_message):
+def process_model(cv_image, message, jointModelObject, print_message, if_test):
     print("Process Model: " + message)
     # convert cv image into processing format
     # TODO: this needs to be corrected
@@ -42,20 +42,24 @@ def process_model(cv_image, message, jointModelObject, print_message):
     imageData['color'] = pixNp
     imageData['shape'] = cnt
 
-    # extract keywords from message
-    languageObject = lm(message)
-    [positiveLanguageData, negativeLanguageData] = languageObject.process_content()
+    # There is no processing of a language for the testing phase.
+    if(not if_test):
+        # extract keywords from message
+        languageObject = lm(message)
+        [positiveLanguageData, negativeLanguageData] = languageObject.process_content()
 
-    # for each keyword
-    # add keyword, image pair to joint model
-    for keyword in positiveLanguageData:
-        jointModelObject.add_word_example_pair(keyword, imageData, "+")
+        # for each keyword
+        # add keyword, image pair to joint model
+        for keyword in positiveLanguageData:
+            jointModelObject.add_word_example_pair(keyword, imageData, "+")
 
-    for keyword in negativeLanguageData:
-        jointModelObject.add_word_example_pair(keyword, imageData, "-")
+        for keyword in negativeLanguageData:
+            jointModelObject.add_word_example_pair(keyword, imageData, "-")
 
-    # Call print message to publish the message to the output node.
-    # print_message(message)
+    # Testing Phase.
+    elif(if_test):
+        # Call print message to publish the message to the output node.
+        # print_message(some_message)
 
     # This is temporary code.
     """
@@ -68,4 +72,3 @@ def process_model(cv_image, message, jointModelObject, print_message):
     a = jointModelObject.classify_example(imageData)
     print(a)
     """
-

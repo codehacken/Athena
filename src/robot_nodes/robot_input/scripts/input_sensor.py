@@ -11,8 +11,10 @@ from std_msgs.msg import String, Int32
 class KeyboardInput:
     def __init__(self):
         # Commands.
-        self._commands = {'image': 1}
+        self._commands = {'image': 1, 'do_test': 3, 'do_train': 4}
         self._exit_cm = "exit"
+        self._test_cm = "test"
+        self._train_cm = "train"
 
         # Create a publisher for the keyboard.
         self._message_pub = rospy.Publisher("/robot/messages", String, queue_size=10)
@@ -28,11 +30,17 @@ class KeyboardInput:
             if (message == self._exit_cm):
                 break
 
-            # Send message to CPU.
-            self._message_pub.publish(message)
+            if (message == self._test_cm):
+                self._command_pub.publish(self._commands['do_test'])
+            elif (message == self._train_cm):
+                self._command_pub.publish(self._commands['do_train'])
 
-            # Send a command message too.
-            self._command_pub.publish(self._commands['image'])
+            else:
+                # Send message to CPU.
+                self._message_pub.publish(message)
+
+                # Send a command message too.
+                self._command_pub.publish(self._commands['image'])
 
 def listener():
     rospy.init_node('robot_input', anonymous=True)

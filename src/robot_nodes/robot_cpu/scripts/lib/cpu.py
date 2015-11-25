@@ -14,7 +14,7 @@ class CPU:
     # To initialize a CPU without a precomputed joint model.
     def __init__(self, ic, joint_model=None):
         # List of commands the CPU takes and its state values.
-        self._commands = {2:self._process_model}
+        self._commands = {2:self._process_model, 3:self._do_test, 4:self._do_train}
 
         # ic is the image converter.
         self._ic = ic
@@ -30,6 +30,7 @@ class CPU:
             self._joint_model = JointModel()
 
         self._output_pub = rospy.Publisher("/robot/talk", String, queue_size=10)
+        self._if_test = False
 
     # Helper functions.
     def _do_process(self, command):
@@ -44,6 +45,16 @@ class CPU:
     def _publish_message(self, message):
         self._output_pub.publish(message)
 
+    def _do_test(self):
+        # This is to perform the test.
+        self._if_test = True
+        self._publish_message("-----------Testing Phase-----------")
+
+    def _do_train(self):
+        # This is to perform training.
+        self._if_test = False
+        self._publish_message("-----------Training Phase----------")
+
     def _process_model(self):
         # Given the function and input of image and keyboard.
-        process_model(self._ic.get_image(), self._message, self._joint_model, self._publish_message)
+        process_model(self._ic.get_image(), self._message, self._joint_model, self._publish_message, self._if_test)
