@@ -61,14 +61,28 @@ def process_model(cv_image, message, jointModelObject, print_message, if_test):
         # Call print message to publish the message to the output node.
         # print_message(some_message)
 
-    # This is temporary code.
-    """
-    print(dir(jointModelObject))
-    print(jointModelObject.knownWords)
+        # call novel scene
+        [bestGuessWord, isConfidentGuess, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores, maxScoreObj] = jointModelObject.classify_example(imageData)
 
-    a = jointModelObject.classify_word_example('red', imageData)
-    print(a)
+        # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
+        index = 0
+        for word in wordMaxProabilityScores:
+            print_message(str(index+1) + " " + word + " " + wordMaxProabilityScores[word])
 
-    a = jointModelObject.classify_example(imageData)
-    print(a)
-    """
+        # print new line for cleanliness
+        print_message("")
+        
+        # print the conclusion
+        print_message("This is the " + str(type(maxScoreObj)) + " " + bestGuessWord)
+
+        # This is temporary code.
+        """
+        print(dir(jointModelObject))
+        print(jointModelObject.knownWords)
+    
+        a = jointModelObject.classify_word_example('red', imageData)
+        print(a)
+    
+        a = jointModelObject.classify_example(imageData)
+        print(a)
+        """
