@@ -421,6 +421,11 @@ class JointModel:
 			# select maximum score corresponding to best interpretation			
 			maxScore = max(probabilityScores.values())			
 
+			maxScoreObj = "none"
+			for classifier in probabilityScores:
+				if(probabilityScores[classifier] == maxScore):
+					maxScoreObj = classifier
+
 			# add to probability scores
 			wordMaxProabilityScores[word] = maxScore
 			wordProbabilityScores[word] = [isWordExampleConsistent, probabilityScores]
@@ -438,7 +443,7 @@ class JointModel:
 			isConfidentGuess = True
 		
 		# return everything known to man
-		return [bestGuessWord, isConfidentGuess, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores]
+		return [bestGuessWord, isConfidentGuess, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores, maxScoreObj]
 		
 	'''
 	experiment: novel english
