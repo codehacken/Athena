@@ -25,6 +25,7 @@ class ImageConverter:
 
         # This is the subscriber to the image.
         self._image_sub = rospy.Subscriber("/kinect2/hd/image_color_rect", Image, self._send_image)
+        #self._image_sub = rospy.Subscriber("/kinect2/hd/image_depth_rect", Image, self._send_image)
 
         # This is the publisher to publish the image to image package, so that it can be viewed.
         self._image_pub = rospy.Publisher("/image", Image, queue_size=10)

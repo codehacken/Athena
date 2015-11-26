@@ -2,3 +2,5 @@ build/
 devel/
 .idea/
 *.pyc
+*.tar.gz
+*.jpg

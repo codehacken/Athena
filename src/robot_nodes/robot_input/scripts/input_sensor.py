@@ -34,7 +34,6 @@ class KeyboardInput:
                 self._command_pub.publish(self._commands['do_test'])
             elif (message == self._train_cm):
                 self._command_pub.publish(self._commands['do_train'])
-
             else:
                 # Send message to CPU.
                 self._message_pub.publish(message)

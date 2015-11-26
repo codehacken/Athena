@@ -70,9 +70,9 @@ def drawRectangle(image,cnt) :
    im = image
    x,y,w,h = boundingRectangle(cnt)
    img = cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,255),2)
-   # cv2.imshow("Contour",im)
-   # cv2.waitKey(0)
-   # killWindows()
+   cv2.imshow("Contour",im)
+   cv2.waitKey(0)
+   #killWindows()
    return im
 
 def objectIdentification1(imageFile) :
@@ -120,14 +120,15 @@ def objectIdentification(imageFile) :
    orig = image.copy()
 
    print len(cnts)
-   newC  = cnts[0]
-   oldArea = 0.0
-   for c in cnts : 
+   my_list = []
+   for c in cnts :
       area = cv2.contourArea(c)
       print "Area",area
-      if area > oldArea :
-         newC = c
-     
+      my_list.append(area)
+
+   mi = max(my_list)
+   index = my_list.index(mi)
+   newC = cnts[index]
    orig = draw_contour(orig, newC, 1)
 
    # show the original, unsorted contour image

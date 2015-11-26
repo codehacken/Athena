@@ -41,8 +41,9 @@ def process_model(cv_image, message, jointModelObject, print_message, if_test):
     imageData = {}
     imageData['color'] = pixNp
     imageData['shape'] = cnt
-
+    print "Printing the size of RGB value ",len(pixNp)
     # There is no processing of a language for the testing phase.
+    print("I am here 1")
     if(not if_test):
         # extract keywords from message
         languageObject = lm(message)
@@ -50,9 +51,11 @@ def process_model(cv_image, message, jointModelObject, print_message, if_test):
 
         # for each keyword
         # add keyword, image pair to joint model
+        print("I am here 2")
         for keyword in positiveLanguageData:
             jointModelObject.add_word_example_pair(keyword, imageData, "+")
 
+        print("I am here 3")
         for keyword in negativeLanguageData:
             jointModelObject.add_word_example_pair(keyword, imageData, "-")
 
@@ -62,19 +65,22 @@ def process_model(cv_image, message, jointModelObject, print_message, if_test):
         # print_message(some_message)
 
         # call novel scene
-        [bestGuessWord, isConfidentGuess, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores, maxScoreObj] = jointModelObject.classify_example(imageData)
+        print("I am here 4")
+        [bestGuessWord, isConfidentGuess, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores,
+         maxScoreObj] = jointModelObject.classify_example(imageData)
 
         # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
+        print("I am here 5")
         index = 0
         for word in wordMaxProabilityScores:
             print_message(str(index+1) + " " + word + " " + wordMaxProabilityScores[word])
 
         # print new line for cleanliness
-        print_message("")
+        print_message(" ")
         
         # print the conclusion
         print_message("This is the " + str(type(maxScoreObj)) + " " + bestGuessWord)
-
+        print("I am here 6")
         # This is temporary code.
         """
         print(dir(jointModelObject))

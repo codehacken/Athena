@@ -15,7 +15,7 @@ class RobotTalk:
 
     # Print Output
     def _show_output(self, message):
-        print(message)
+        print(message.data)
 
 def listener():
     # Initiate the listener.

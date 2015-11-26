@@ -48,11 +48,13 @@ class CPU:
     def _do_test(self):
         # This is to perform the test.
         self._if_test = True
+        print("-----------Testing Phase-----------")
         self._publish_message("-----------Testing Phase-----------")
 
     def _do_train(self):
         # This is to perform training.
         self._if_test = False
+        print("-----------Training Phase----------")
         self._publish_message("-----------Training Phase----------")
 
     def _process_model(self):
