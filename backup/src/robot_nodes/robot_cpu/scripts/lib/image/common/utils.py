@@ -15,7 +15,7 @@ import numpy as np
 objectAttributes = []
 
 def imageRead(imageFile):
- #  image = cv2.imread(imageFile)
+   #image = cv2.imread(imageFile)
    return imageFile
 
 def killWindows() :
@@ -36,35 +36,14 @@ def findContour(threshold):
 
 
 def selectContour(imageFile,contours):
-   print "Contours ",len(contours)
-   my_list = []
-   im = imageRead(imageFile)
-   print "Image Size ",im.size
-   print "Image Type ", im.shape
    for index in range(len(contours)) :
-#      print "Object ",index
-#      im = imageRead(imageFile)
-#      cv2.drawContours(im, contours, index, (0,255,0), 3)
+      print "Object ",index
+      im = imageRead(imageFile)
+      cv2.drawContours(im, contours, index, (0,255,0), 3)
       cnt = contours[index]
-      area = cv2.contourArea(cnt)
-#      print "Area",index," ",area
-      my_list.append(area) 
-
       # cv2.imshow("Contour",im)
       # cv2.waitKey(0)
       # killWindows()
-   list1 = my_list
-  # print my_list
-   fi = sorted(set(list1))[-1]
-   print fi
-   index = my_list.index(fi)
-   x,y,w,h = boundingRectangle(contours[index])
-   print x,y,w,h
-   mi = sorted(set(list1))[-2]
-   print mi
-   index = my_list.index(mi)
-   print index
-   return index
 
    while True:
       try:
@@ -93,17 +72,17 @@ def drawRectangle(image,cnt) :
    img = cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,255),2)
    cv2.imshow("Contour",im)
    cv2.waitKey(0)
-   killWindows()
+   #killWindows()
    return im
 
-def objectIdentification(imageFile) :
+def objectIdentification1(imageFile) :
    image = imageRead(imageFile)
    imgray = colorToGray(image)
    thresh = threshChange(imgray)
    contours = findContour(thresh)
    contNo = selectContour(imageFile,contours)
    cnt = contours[contNo]
-   #drawRectangle(image,cnt)
+   drawRectangle(imageFile,cnt) 
    return cnt
 
 def draw_contour(image, c, i):
@@ -122,7 +101,7 @@ def draw_contour(image, c, i):
 
         return image
 
-def objectIdentification1(imageFile) :
+def objectIdentification(imageFile) :
    image = imageRead(imageFile) 
    accumEdged = np.zeros(image.shape[:2], dtype="uint8")
    # loop over the blue, green, and red channels, respectively
