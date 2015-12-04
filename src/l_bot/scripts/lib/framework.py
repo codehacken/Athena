@@ -300,21 +300,64 @@ class JointModel:
 
 	# creating an empty model
 	def __init__(self):
+	
 		# known words and their classifiers
 		self.knownWords = {}
 		self.minimumGuessScore = JM_GUESS_SCORE_THRESHOLD
 
 	# return known words for evaluating classifiers
 	def get_known_words(self):
+
+		probabilityScores = {}
+
+		# for each word, compute a score
+		for word in self.knownWords:
+
+			# get all examples corresponding to this word
+			# it is stored in any non-synonym classifier
+			wordClassifier = ""
+			
+			for classifier in self.knownWords[word]
+				if("Synonym" not in str(type(classifier))):
+					# we will always enter this condition while iterating
+					wordClassifier = classifier
+					break
+		
+			# get all images corresponding to this classifer
+			wordPositiveExamples = wordClassifier.positiveExamples
+			wordNegativeExamples = wordClassifier.negativeExamples
+		
+			# process positive images
+			totalPositiveScore = 0
+			for example in wordPositiveExamples
+				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
+				maximumProbabilityScore = max(probabilityScores.values())
+				totalPositiveScore += maximumProbabilityScore
+
+			# process positive images
+			totalNegativeScore = 0
+			for example in wordNegativeExamples
+				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
+				maximumProbabilityScore = min(probabilityScores.values())
+				totalNegativeScore += maximumProbabilityScore
+
+			# compute total score
+			# normalize for positive and negative examples
+			totalScore = (totalPositiveScore/len(wordPositiveExamples)) - (totalNegativeScore/len(wordNegativeExamples))
+
+			probabilityScores[word] = totalScore		
+
 		# return dictionary of known words
-		return self.knownWords
+		return probabilityScores
 
 	# add a word-example pair to the model
 	# word: string
 	# example: image
 	# example polairty: global definition (constant)
 	def add_word_example_pair(self, word, example, examplePolarity):
-		currKnownWords = self.knownWords.keys()
+	
+		currentKnownWords = self.knownWords.keys()
+                
                 # check if it is a new word
 		if(word not in self.knownWords.keys()):
 			# new word. add possibly associated classifiers
@@ -326,7 +369,7 @@ class JointModel:
 			# add possibilities of being a synonym
 			# this will not contain redundant information like (a b), (a c) and (b c)
 			# this is because syonyms are added in order
-			for knownWord in currKnownWords:
+			for knownWord in currentKnownWords:
 				# word may be a synonym of knownWord
 				# when classifying, synonyms are checked for all classifier types
 				# e.g. color, shape
