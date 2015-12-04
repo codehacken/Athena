@@ -6,7 +6,8 @@ AUTHOR: Ashwinkumar Ganesan.
 """
 __author__ = 'Ashwinkumar Ganesan'
 
-from lib.node import RobotNode, Message
+from lib.node import RobotNode
+from lib.transport import Message
 
 class InputNode(RobotNode):
     _cpu_id = 2
