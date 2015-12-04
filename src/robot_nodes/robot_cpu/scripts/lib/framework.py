@@ -17,8 +17,9 @@ from lib.image.shape import shapeUtils as su
 OW_POSITIVE_POLARITY = "+"
 OW_NEGATIVE_POLARITY = "-"
 # comparison threshold values to consider items as duplicates
-OW_COLOR_DUPLICATE_THRESHOLD = 1
-OW_SHAPE_DUPLICATE_THRESHOLD = 1
+# ignoring duplicates right now
+OW_COLOR_DUPLICATE_THRESHOLD = 1.1
+OW_SHAPE_DUPLICATE_THRESHOLD = 1.1
 # comparison threshold values to consider items as matched or mismatched
 # this is for classification purposes
 OW_COLOR_POSITIVE_EXAMPLE_THRESHOLD = 0.8
@@ -115,18 +116,21 @@ class ObjWord:
 	# add a new example
 	# example: image 
 	# example polairty: global definition (constant)
-	def add_example(self, example, examplePolarity):
-		if(examplePolarity == OW_POSITIVE_POLARITY):
-			# positive example
-			if(self.is_known_example(example, self.positiveExamples) == False):
-				self.positiveExamples.append(example)
-		elif(examplePolarity == OW_NEGATIVE_POLARITY):
-			# negative example
-			if(self.is_known_example(example, self.negativeExamples) == False):
-				self.negativeExamples.append(example)
-		else:
-			# neither positive nor negative example. ignore
-			pass
+	def add_example(self, example, examplePolarity, numberOfTimes=1):
+
+		# add multiple times
+		for time in numberOfTimes:
+			if(examplePolarity == OW_POSITIVE_POLARITY):
+				# positive example
+				if(self.is_known_example(example, self.positiveExamples) == False):
+					self.positiveExamples.append(example)
+			elif(examplePolarity == OW_NEGATIVE_POLARITY):
+				# negative example
+				if(self.is_known_example(example, self.negativeExamples) == False):
+					self.negativeExamples.append(example)
+			else:
+				# neither positive nor negative example. ignore
+				pass
 
 	# get classification (probability) score for this classifier based on known examples
 	def calculate_probability_score(self, example, additionalPositiveExamples=[], additionalNegatveExamples=[]):
