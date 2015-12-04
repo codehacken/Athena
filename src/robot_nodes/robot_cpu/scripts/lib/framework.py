@@ -304,6 +304,11 @@ class JointModel:
 		self.knownWords = {}
 		self.minimumGuessScore = JM_GUESS_SCORE_THRESHOLD
 
+	# return known words for evaluating classifiers
+	def get_known_words(self):
+		# return dictionary of known words
+		return self.knownWords
+
 	# add a word-example pair to the model
 	# word: string
 	# example: image
@@ -399,8 +404,8 @@ class JointModel:
 	# e.g. "what is this?"
 	# e.g. of bayes' rule: p(cube|example) = p(example|cube) * p(cube) / p(example)
 	# p(example) is constant across all word classifications and can be ignored when comparing them
-    # p(example|cube): the fraction of examples in "cube" which matched the current example
-    # p(cube): the fraction of examples under "cube" relative to examples over all known words
+	# p(example|cube): the fraction of examples in "cube" which matched the current example
+	# p(cube): the fraction of examples under "cube" relative to examples over all known words
 	# p(cube) = totalExamples of cube / total examples of all words
 	# the denominator is constant for all word scores. ignore it
 	# consider non-normalized version of p(cube) to calculate score
