@@ -25,9 +25,11 @@ class RobotNode(object):
         ##########################################################
         # Map the commands RECEIVED, types with their actions.
         self._recv_command_map = {'train': {0: 'recv_train'},
-                                  'test':{0: 'recv_test'},
+                                  'test':{0: 'recv_test',
+                                          1: 'recv_test_case'},
                                   'exit':{0: 'recv_exit'},
-                                  'learn':{6: 'recv_add_example'}
+                                  'learn':{6: 'recv_add_example'},
+                                  'print':{0: 'recv_print_message'}
         }
         ##########################################################
 
@@ -40,13 +42,13 @@ class RobotNode(object):
     # Execute commands according to map defined.
     def _process_message(self, message):
         # Extract the command and the command-type.
-        if message.cmd not in self._recv_command_map:
-            print("Incorrect Command: " + message.cmd)
+        if message.command not in self._recv_command_map:
+            print("Incorrect Command: " + message.command)
 
-        if message.type not in self._recv_command_map[message.cmd]:
+        if message.type not in self._recv_command_map[message.command]:
             print("Incorrect Command Type: " + message.type)
 
-        getattr(self, self._recv_command_map[message.cmd][message.type])()
+        getattr(self, self._recv_command_map[message.command][message.type])(message)
 
     """
     Function to send a message to other nodes.
@@ -79,6 +81,15 @@ class RobotNode(object):
         msg = Message(self._t_layer._id, -1, 'test', 0, "")
         self.send_message(msg)
 
+    """
+    The message to be printed is sent to a specific node or
+    all nodes using broadcast. (USE: node_id)
+    """
+    def send_print_message(self, node_id, msg_str):
+        # -1 because this is a broadcast message.
+        msg = Message(self._t_layer._id, node_id, 'print', 0, msg_str)
+        self.send_message(msg)
+
     # Command to exit all Nodes.
     # Use carefully.
     def send_exit(self):
@@ -94,16 +105,25 @@ class RobotNode(object):
     def send_add_example(self):
         pass
 
+    def send_test_case(self):
+        pass
+
     ####################################################################
     # Functions to perform operations when commands are received.
-    def recv_train(self):
+    def recv_train(self, message):
+        print("Node Training Mode: On")
         self._train_mode = True
 
-    def recv_test(self):
+    def recv_test(self, message):
+        print("Node Testing Mode: On")
         self._train_mode = False
 
-    def recv_exit(self):
+    def recv_exit(self, message):
+        print("Node Exiting.....")
         sys.exit()
+
+    def recv_print_message(self, message):
+        print(message.message)
 
     ####################################################################
     # SET of recv functions whose implementation is left to the specific
@@ -111,5 +131,8 @@ class RobotNode(object):
 
     # Receive a message to add a image snapshot and associate a text
     # message with it.
-    def recv_add_example(self):
+    def recv_add_example(self, message):
+        pass
+
+    def recv_test_case(self, message):
         pass

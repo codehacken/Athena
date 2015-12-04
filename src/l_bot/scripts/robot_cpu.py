@@ -5,16 +5,18 @@ This is the script that implements the robot's CPU which contains multiple parts
 2. Take input from the keyboard.
 AUTHOR: Ashwinkumar Ganesan.
 """
+__author__ = 'Ashwinkumar Ganesan'
+
 
 # ROS.
 import rospy
 from lib.kinect import ImageConverter
-from lib.cpu import CPU
+from lib.cpu import CpuNode
 from lib.process import initialize_model
 
 def listener(joint_model):
     ic = ImageConverter()
-    cpu = CPU(ic, joint_model)
+    cpu = CpuNode(2, 'robot_cpu', '/robot/messages', ic, joint_model)
     rospy.init_node('robot_cpu', anonymous=True)
     rospy.spin()
 

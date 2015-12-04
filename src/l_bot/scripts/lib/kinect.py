@@ -35,6 +35,9 @@ class ImageConverter:
     Convert the raw image from Kinect2 to a cv_image and send it back.
     """
     def get_image(self):
+        if self._raw_image == None:
+            print("Image not received from Kinect")
+            return None
         try:
             cv_image = self._bridge.imgmsg_to_cv2(self._raw_image, "bgr8")
             self._image = cv_image

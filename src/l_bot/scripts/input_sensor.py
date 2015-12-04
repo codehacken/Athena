@@ -20,6 +20,10 @@ class InputNode(RobotNode):
         msg = Message(self._t_layer._id, self._cpu_id, 'learn', 6, msg_str)
         self.send_message(msg)
 
+    def send_test_case(self, msg_str):
+        msg = Message(self._t_layer._id, self._cpu_id, 'test', 1, msg_str)
+        self.send_message(msg)
+
     # send input
     def send_input(self):
         while(1):
@@ -34,9 +38,13 @@ class InputNode(RobotNode):
             elif (user_input == "train"):
                 self.send_train()
             else:
-                self.send_add_example(user_input)
+                if self._train_mode == True:
+                    self.send_add_example(user_input)
+                else:
+                    self.send_test_case(user_input)
 
 if __name__ == '__main__':
     robot_input = InputNode(1, 'robot_input', '/robot/messages')
+    #robot_input.start()
     robot_input.send_input()
 
