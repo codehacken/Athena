@@ -4,67 +4,38 @@ This is the ROS Node which acts the robots inout sensor. The input
 is specifically from a keyboard given through stdin.
 AUTHOR: Ashwinkumar Ganesan.
 """
+__author__ = 'Ashwinkumar Ganesan'
 
-import rospy
-from std_msgs.msg import String, Int32
-from l_bot.msg import Control
+from lib.node import RobotNode, Message
 
-class KeyboardInput:
-    def __init__(self):
-        # Commands.
-        self._commands = {'image': 1, 'do_test': 3, 'do_train': 4}
-        self._exit_cm = "exit"
-        self._test_cm = "test"
-        self._train_cm = "train"
+class InputNode(RobotNode):
+    _cpu_id = 2
+    _output_node_id = 3
 
-        # Create a publisher for the keyboard.
-        self._message_pub = rospy.Publisher("/robot/messages", String, queue_size=10)
+    def __init__(self, ID, node_name, topic_name):
+        super(InputNode, self).__init__(ID, node_name, topic_name)
 
-        # Create a publisher for the commands.
-        # We sent commands from the keyboard to synchronize the frame and the associated message.
-        self._command_pub = rospy.Publisher("/robot/commands", Int32, queue_size=10)
-
-        self._command_pub1 = rospy.Publisher("/robot/commands1", Control, queue_size=10)
+    def send_add_example(self, msg_str):
+        msg = Message(self._t_layer._id, self._cpu_id, 'learn', 6, msg_str)
+        self.send_message(msg)
 
     # send input
     def send_input(self):
         while(1):
-            print("I am here1")
-            message = raw_input("Message: ")
-            if (message == self._exit_cm):
-                break
+            user_input = raw_input("Message: ")
+            # If the user input is an exit command.
+            if (user_input == "exit"):
+                self.send_exit()
 
-            if (message == self._test_cm):
-                self._command_pub.publish(self._commands['do_test'])
-            elif (message == self._train_cm):
-                self._command_pub.publish(self._commands['do_train'])
+            # If the user wants to start the test phase or training phase.
+            if (user_input == "test"):
+                self.send_test()
+            elif (user_input == "train"):
+                self.send_train()
             else:
-                """
-                # Send message to CPU.
-                #self._message_pub.publish(message)
-
-                # Send a command message too.
-                #self._command_pub.publish(self._commands['image'])
-                """
-                print("I am here 2")
-                msg = Control()
-
-                msg.source = 1
-                msg.target = 2
-                msg.command = "hello"
-                msg.type = 3
-                msg.message = "my world"
-                msg.action = "do something"
-
-                self._command_pub1.publish(msg)
-
-
-
-def listener():
-    rospy.init_node('robot_input', anonymous=True)
-    ki = KeyboardInput()
-    ki.send_input()
+                self.send_add_example(user_input)
 
 if __name__ == '__main__':
-    listener()
+    robot_input = InputNode(1, 'robot_input', '/robot/messages')
+    robot_input.send_input()
 

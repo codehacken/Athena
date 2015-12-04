@@ -16,22 +16,21 @@ It contains of the following parameters:
 3. Command - String
 4. Type - Int32
 5. Message - String
-6. Action - String
 """
 class Message(object):
-    def __init__(self, source, target, cmd, type, message, action):
+    def __init__(self, source, target, cmd, type, message):
         # Create the message object.
-        self.source = source
-        self.target = target
-        self.cmd = cmd
-        self.type = type
-        self.message = message
-        self.action = action
+        self.msg = Control()
+
+        # Create the message.
+        self.msg.source = source
+        self.msg.target = target
+        self.msg.command = cmd
+        self.msg.type = type
+        self.msg.message = message
 
     def get_message(self):
-        return (self.source, self.target,
-                self.cmd, self.type,
-                self.message, self.action)
+        return self.msg
 
 """
 Define the transport layer which processes the messages.
@@ -40,7 +39,7 @@ The transport layer consists of a single publisher and subscriber.
 This is to reduce synchronization issues. The message contains all
 the information necessary to work with the messages.
 
-Class Tlayer requires the following parameters:
+Class Tlayer() requires the following parameters:
 1. ID: The ID of the node creating the layer.
 2. node_name: The name of the ROS Node started.
 3. topic_name: The ROS Topic which publishes and subscribes the data.
@@ -49,13 +48,11 @@ Class Tlayer requires the following parameters:
 class TLayer(object):
     # Define the queue size for the publisher.
     _queue_size = 10
+    _broadcast = -1
 
-    def __init__(self, ID, node_name, topic_name, message_handler):
+    def __init__(self, ID, topic_name, message_handler):
         self._id = ID
-        self.name = node_name
         self.topic = topic_name
-
-
         self._message_pub = rospy.Publisher(self.topic, Control,
                                             queue_size=TLayer._queue_size)
 
@@ -65,16 +62,17 @@ class TLayer(object):
         # Message Handler is the callback function.
         self._m_handle = message_handler
 
-        rospy.init_node(self.name, anonymous=True)
-
     # Hidden Functions.
     # Process incoming messages to the subscriber.
     def _process_message(self, message):
         # If the source of the message and the target are the same,
         # then reject the message.
         if message.source != self._id:
-            self._m_handle(message)
+            # Check if the message is intended or the current Node or broadcast.
+            if message.target == self._id or message.target == TLayer._broadcast:
+                self._m_handle(message)
 
-    # Start the ROS Node.
-    def start(self):
-        rospy.spin()
+    # Publish a message.
+    # message should be of type lib.transport.Message
+    def send_message(self, message):
+        self._message_pub.publish(message.get_message())
