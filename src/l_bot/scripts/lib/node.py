@@ -10,6 +10,9 @@ from lib.transport import TLayer, Message
 import sys
 from abc import ABCMeta, abstractmethod
 
+# Constants.
+mode = {'active': 0, 'passive': 6}
+
 """
 This is the basic Node.
 Inherit the class for creating new sensor nodes.
@@ -22,16 +25,22 @@ class RobotNode(object):
         self.name = node_name
         self._t_layer = TLayer(ID, topic_name, self._process_message)
 
-        ##########################################################
+        ############################################################
         # Map the commands RECEIVED, types with their actions.
         self._recv_command_map = {'train': {0: 'recv_train'},
                                   'test':{0: 'recv_test',
                                           1: 'recv_test_case'},
                                   'exit':{0: 'recv_exit'},
-                                  'learn':{6: 'recv_add_example'},
+                                  'learn':{0: 'recv_learn_example',
+                                           1: 'recv_learn_example',
+                                           2: 'recv_learn_example',
+                                           3: 'recv_learn_example',
+                                           4: 'recv_learn_example',
+                                           5: 'recv_learn_example',
+                                           6: 'recv_add_example'},
                                   'print':{0: 'recv_print_message'}
         }
-        ##########################################################
+        ############################################################
 
         # Check if the node is in training mode or test mode.
         self._train_mode = True
@@ -108,6 +117,8 @@ class RobotNode(object):
     def send_test_case(self):
         pass
 
+    def send_learn_example(self):
+        pass
     ####################################################################
     # Functions to perform operations when commands are received.
     def recv_train(self, message):
@@ -135,4 +146,7 @@ class RobotNode(object):
         pass
 
     def recv_test_case(self, message):
+        pass
+
+    def recv_learn_example(self, message):
         pass

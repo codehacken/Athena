@@ -4,24 +4,23 @@ This is the ROS Node which acts the Robots output.
 AUTHOR: Ashwinkumar Ganesan.
 """
 
-import rospy
-from std_msgs.msg import String
+from lib.node import RobotNode
+from lib.transport import Message
 
-class RobotTalk:
-    def __init__(self):
-        # This is the node for the robot output.
-        # The current output is shown on the console.
-        self._output_sub = rospy.Subscriber("/robot/talk", String, self._show_output)
+class OutputNode(RobotNode):
+    _input_node_id = 1
+    _cpu_id = 2
 
-    # Print Output
-    def _show_output(self, message):
-        print(message.data)
+    def __init__(self, ID, node_name, topic_name):
+        super(OutputNode, self).__init__(ID, node_name, topic_name)
+
+    def recv_learn_example(self, message):
+        print(message.message)
 
 def listener():
     # Initiate the listener.
-    rt = RobotTalk()
-    rospy.init_node('robot_output', anonymous=True)
-    rospy.spin()
+    out = OutputNode(3, 'robot_output', '/robot/messages')
+    out.start()
 
 if __name__ == '__main__':
     listener()

@@ -7,9 +7,10 @@ AUTHOR: Ashwinkumar Ganesan.
 __author__ = 'Ashwinkumar Ganesan'
 
 # ROS.
-from process import add_example, test_example
+from process import add_example, test_example, learn_example
 from lib.framework import JointModel
 from lib.node import RobotNode
+from lib.transport import Message
 
 class CpuNode(RobotNode):
     _input_node_id = 1
@@ -26,6 +27,12 @@ class CpuNode(RobotNode):
 
     def send_print_message_to_op(self, msg_str):
         self.send_print_message(CpuNode._output_node_id, msg_str)
+
+    # This is the message that is sent for an active learning example.
+    def send_learn_example(self, msg_id, msg_str):
+        msg = Message(self._t_layer._id, -1, 'learn',
+                      msg_id, msg_str)
+        self.send_message(msg)
 
     """
     Receive a message from the user describing the object that
@@ -49,4 +56,14 @@ class CpuNode(RobotNode):
                          self.send_print_message_to_op)
         else:
             msg_str = "Robot is in training mode, switch to test mode to validate."
+            self.send_print_message_to_op(msg_str)
+
+    def recv_learn_example(self, message):
+        # This is the passive learning implementation.
+        # Associate the sentence with the image.
+        if self._train_mode == True:
+            learn_example(self._ic.get_image(), message.message, self._joint_model,
+                          self.send_print_message_to_op, self.send_learn_example)
+        else:
+            msg_str = "Robot is in test mode, switch to training mode to add more examples."
             self.send_print_message_to_op(msg_str)

@@ -11,6 +11,8 @@ from lib.image.shape import shapeUtils as su
 # import language processing library
 from lib.lang.nlp import LanguageModule as lm
 
+question_asked = False
+
 # This is to initialize the joint model
 # either with a precomputed model or by computing it in the function.
 def initialize_model():
@@ -60,7 +62,6 @@ def add_example(cv_image, message, jointModelObject, print_message):
     print_message("Example Object - Concept Added.")
 
 def test_example(cv_image, message, jointModelObject, print_message):
-
     # convert cv image into processing format
     # TODO: this needs to be corrected
     # we do not read a file
@@ -98,22 +99,49 @@ def test_example(cv_image, message, jointModelObject, print_message):
     # print the conclusion
     print_message("This is the " + str(type(maxScoreObj)) + " " + bestGuessWord)
 
+def learn_example(cv_image, message, jointModelObject, print_message, ask_question, question_asked):
+    # convert cv image into processing format
+    # TODO: this needs to be corrected
+    # we do not read a file
+    # we convert from one format to the other
+    # image = utils.imageRead(imageFile)
 
+    if(not question_asked):
+        if cv_image == None:
+            print_message("Unable to capture an Image.")
+            return
 
+        image = cv_image
 
+        # extract color and shape of image
+        # image_copy = copy.copy(image)
+        cnt = utils.objectIdentification(cv_image)
+        [x, y, w, h] = utils.boundingRectangle(cnt)
+        pixNp = dc.findAllPixels(image, cnt, x, y, w, h)
+        pixNp = dc.findUniquePixels(pixNp)
 
+        # store image data as dictionary
+        imageData = {'color': pixNp, 'shape': cnt}
+        print("Printing the size of RGB value " + str(len(pixNp)))
 
+        # extract keywords from message
+        languageObject = lm(message)
+        [positiveLanguageData, negativeLanguageData] = languageObject.process_content()
 
+        # for each keyword
+        # add keyword, image pair to joint model
+        for keyword in positiveLanguageData:
+            jointModelObject.add_word_example_pair(keyword, imageData, "+")
+
+        for keyword in negativeLanguageData:
+            jointModelObject.add_word_example_pair(keyword, imageData, "-")
 
         """
-        # This is temporary code.
-
-        print(dir(jointModelObject))
-        print(jointModelObject.knownWords)
-
-        a = jointModelObject.classify_word_example('red', imageData)
-        print(a)
-
-        a = jointModelObject.classify_example(imageData)
-        print(a)
+        ask_question(msg_id, msg_str)
         """
+    else:
+        print_message("Do Something")
+        question_asked = False
+
+    # Send ACK to output Node that the concept has been added.
+    #print_message("Example Object - Concept Added.")

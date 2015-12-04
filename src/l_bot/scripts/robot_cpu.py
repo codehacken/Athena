@@ -17,8 +17,9 @@ from lib.process import initialize_model
 def listener(joint_model):
     ic = ImageConverter()
     cpu = CpuNode(2, 'robot_cpu', '/robot/messages', ic, joint_model)
-    rospy.init_node('robot_cpu', anonymous=True)
-    rospy.spin()
+    #rospy.init_node('robot_cpu', anonymous=True)
+    #rospy.spin()
+    cpu.start()
 
 if __name__ == '__main__':
 
