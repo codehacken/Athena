@@ -119,7 +119,7 @@ class ObjWord:
 	def add_example(self, example, examplePolarity, numberOfTimes=1):
 
 		# add multiple times
-		for time in numberOfTimes:
+		for time in range(numberOfTimes):
 			if(examplePolarity == OW_POSITIVE_POLARITY):
 				# positive example
 				if(self.is_known_example(example, self.positiveExamples) == False):
@@ -317,7 +317,7 @@ class JointModel:
 			# it is stored in any non-synonym classifier
 			wordClassifier = ""
 			
-			for classifier in self.knownWords[word]
+			for classifier in self.knownWords[word]:
 				if("Synonym" not in str(type(classifier))):
 					# we will always enter this condition while iterating
 					wordClassifier = classifier
@@ -329,14 +329,14 @@ class JointModel:
 		
 			# process positive images
 			totalPositiveScore = 0.0
-			for example in wordPositiveExamples
+			for example in wordPositiveExamples:
 				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
 				maximumProbabilityScore = max(probabilityScores.values())
 				totalPositiveScore += maximumProbabilityScore
 
 			# process positive images
 			totalNegativeScore = 0.0
-			for example in wordNegativeExamples
+			for example in wordNegativeExamples:
 				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
 				maximumProbabilityScore = min(probabilityScores.values())
 				totalNegativeScore += maximumProbabilityScore
@@ -429,7 +429,7 @@ class JointModel:
 						break;
 
 				probabilityScore = synonymClassifierObj.calculate_probability_score(example, classifier.positiveExamples, classifier.negativeExamples)
-			
+
 			# add score to classification scores
 			probabilityScores[classifier] = probabilityScore
 

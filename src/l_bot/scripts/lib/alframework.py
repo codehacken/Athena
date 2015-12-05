@@ -173,7 +173,7 @@ class ALUniRobotDrivenModel:
              
                       sentenceInReturn =  AL_QUESTIONNAIRE[self.questionFlag] + self.wordInQuestion + " ? "
 
-                 return [self.questionFlag,sentenceInReturn]
+                return [self.questionFlag,sentenceInReturn]
 
 
 '''

@@ -29,6 +29,7 @@ def add_example(cv_image, message, jointModelObject, print_message):
     # we do not read a file
     # we convert from one format to the other
     # image = utils.imageRead(imageFile)
+    print("Adding an Example...")
     if cv_image == None:
         print_message("Unable to capture an Image.")
         return
@@ -67,6 +68,7 @@ def test_example(cv_image, message, jointModelObject, print_message):
     # we do not read a file
     # we convert from one format to the other
     #image = utils.imageRead(imageFile)
+    print("Test an Example...")
     if cv_image == None:
         print_message("Unable to capture an Image.")
         return
@@ -89,9 +91,8 @@ def test_example(cv_image, message, jointModelObject, print_message):
      maxScoreObj] = jointModelObject.classify_example(imageData)
 
     # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
-    index = 0
-    for word in wordMaxProabilityScores:
-        print_message(str(index+1) + " " + word + " " + wordMaxProabilityScores[word])
+    for idx, word in enumerate(wordMaxProabilityScores):
+        print_message(str(idx+1) + " " + word + " " + str(wordMaxProabilityScores[word]))
 
     # print new line for cleanliness
     print_message(" ")

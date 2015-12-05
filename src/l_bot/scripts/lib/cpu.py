@@ -28,7 +28,7 @@ class CpuNode(RobotNode):
 
         # Depending on the initialization, the joint model may be empty
         # or not. Initialize the ALFramework here.
-        self.al_framework = ALUniRobotDrivenModel(self._joint_model)
+        # self.al_framework = ALUniRobotDrivenModel(self._joint_model)
 
     def send_print_message_to_op(self, msg_str):
         self.send_print_message(CpuNode._output_node_id, msg_str)

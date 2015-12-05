@@ -21,7 +21,7 @@ class InputNode(RobotNode):
         self._msg_state = act_pass[mode_type]
 
     def send_add_example(self, msg_str):
-        msg = Message(self._t_layer._id, self._cpu_id, 'learn', 6, msg_str)
+        msg = Message(self._t_layer._id, self._cpu_id, 'learn', 7, msg_str)
         self.send_message(msg)
 
     def send_test_case(self, msg_str):
