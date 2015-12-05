@@ -328,14 +328,14 @@ class JointModel:
 			wordNegativeExamples = wordClassifier.negativeExamples
 		
 			# process positive images
-			totalPositiveScore = 0
+			totalPositiveScore = 0.0
 			for example in wordPositiveExamples
 				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
 				maximumProbabilityScore = max(probabilityScores.values())
 				totalPositiveScore += maximumProbabilityScore
 
 			# process positive images
-			totalNegativeScore = 0
+			totalNegativeScore = 0.0
 			for example in wordNegativeExamples
 				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
 				maximumProbabilityScore = min(probabilityScores.values())
@@ -343,8 +343,15 @@ class JointModel:
 
 			# compute total score
 			# normalize for positive and negative examples
-			totalScore = (totalPositiveScore/len(wordPositiveExamples)) - (totalNegativeScore/len(wordNegativeExamples))
-
+			totalScore = 0
+			
+			# avoid division by zero
+			if(len(wordPositiveExamples) > 0):
+				totalScore += totalPositiveScore/len(wordPositiveExamples)
+			
+			if(len(wordNegativeExamples) > 0):
+				totalScore -= totalNegativeScore/len(wordNegativeExamples)
+			
 			probabilityScores[word] = totalScore		
 
 		# return dictionary of known words
