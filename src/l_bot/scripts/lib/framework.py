@@ -146,6 +146,7 @@ class ObjWord:
 
 		# check against positive examples
 		for positiveExample in positiveExamples:
+			print(self.compare_items(example, positiveExample)
 			if(self.compare_items(example, positiveExample) > self.get_positive_example_threshold):
 				correctExamples += 1
 
