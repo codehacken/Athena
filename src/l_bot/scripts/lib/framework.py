@@ -159,6 +159,7 @@ class ObjWord:
 				correctExamples += 1
 
 		# compute p(example|word)
+		print("correct examples: " + str(correctExamples))
 		totalExamples = len(positiveExamples) + len(negativeExamples)
 		pExampleGivenWord = correctExamples/float(totalExamples)
 
