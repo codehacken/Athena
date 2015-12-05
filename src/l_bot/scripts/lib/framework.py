@@ -146,26 +146,28 @@ class ObjWord:
 
 		# check against positive examples
 		for positiveExample in positiveExamples:
-			print("in positive example" + str(self.compare_items(example, positiveExample)) + str(self.get_positive_example_threshold()))
+			#print("in positive example" + str(self.compare_items(example, positiveExample)) + str(self.get_positive_example_threshold()))
 			if(self.compare_items(example, positiveExample) > self.get_positive_example_threshold()):
 				correctExamples += 1
 
 		# check against negative examples
 		for negativeExample in negativeExamples:
-			print("in negative example")
-			print(self.compare_items(example, negativeExample))
+			#print("in negative example")
+			#print(self.compare_items(example, negativeExample))
 			if(self.compare_items(example, negativeExample) < self.get_negative_example_threshold()):
 				correctExamples += 1
 
 		# compute p(example|word)
-		print("correct examples: " + str(correctExamples))
+		#print("correct examples: " + str(correctExamples))
 		totalExamples = len(positiveExamples) + len(negativeExamples)
 		pExampleGivenWord = correctExamples/float(totalExamples)
 
 		# p(word) = totalExamples / examples over all worlds
 		# the denominator is constant for all word scores. ignore it
 		# consider non-normalized version of p(word) to calculate score
-		probabilityScore = pExampleGivenWord*totalExamples
+		# probabilityScore = pExampleGivenWord*totalExamples cancels totalExamples
+		# so we can use just correctExamples
+		probabilityScore = correctExamples
 
 		# return the score
 		return probabilityScore
@@ -176,6 +178,9 @@ null hypothesis is not a class. it is a conclusion if no class matches
 '''
 class ObjColor(ObjWord):
 	
+	# static type definition
+	_type_ = "Color"
+
 	# compare two items in terms of colors and get a score
 	# item 1: image 
 	# item 2: image 
@@ -204,6 +209,9 @@ class ObjColor(ObjWord):
 		return OW_COLOR_CLASSIFICATION_THRESHOLD
 
 class ObjShape(ObjWord):
+
+	# static type definition
+	_type_ = "Shape"
 
 	# compare two items in terms of shape and get a score
 	# item 1: image 
@@ -237,6 +245,9 @@ class ObjSynonymColor(ObjWord):
 	# re-uses some of ObjWord but not as much as Color and Shape do
 	# only re-uses example addition code
 
+	# static type definition
+	_type_ = "Synonym Color"
+
 	# creating a word as a synonym for another word
 	# word: string
 	# synonym: string
@@ -267,6 +278,9 @@ class ObjSynonymShape(ObjWord):
 
 	# re-uses some of ObjWord but not as much as Color and Shape do
 	# only re-uses example addition code
+
+	# static type definition
+	_type_ = "Synonym Shape"
 
 	# creating a word as a synonym for another word
 	# word: string
