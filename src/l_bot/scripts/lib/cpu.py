@@ -25,6 +25,8 @@ class CpuNode(RobotNode):
 
         if joint_model == None:
             self._joint_model = JointModel()
+        else:
+            self._joint_model = joint_model
 
         # Depending on the initialization, the joint model may be empty
         # or not. Initialize the ALFramework here.

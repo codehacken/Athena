@@ -46,5 +46,4 @@ if __name__ == '__main__':
         exit(0)
 
     # This is a precomputed joint model.
-    joint_model = initialize_model()
     listener(joint_model)

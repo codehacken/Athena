@@ -96,6 +96,6 @@ def compare_items(pix1, pix2):
    #print(inter)
    equalRate = float(len(pix1) - len(inter))/float(len(pix1))
    equalRate = 1.0 - equalRate
-   print "Color is compared : ", equalRate
+   #print "Color is compared : ", equalRate
    return equalRate
 
