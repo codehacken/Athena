@@ -1,0 +1,19 @@
+Message: this looks like a green hemisphere
+Message: this is a three dimensional solid rectangle
+Message: a blue cylinder
+Message: looks like blue rectangle
+Message: red half pipe
+Message: green solid cube
+Message: this is a three dimensional red cube with six sides
+Message: this is a blue long stripped rectangle
+Message: a green long strip
+Message: a solid triangular object
+Message: A blue thin rectangle
+Message: this looks like a corner of the solid green triangular shape
+Message: A red cylinder
+Message: this is another green rectangle
+Message: A red solid triangle shaped object
+Message: A long blue rectangle
+Message: This looks like blue solid triangle
+Message: this is a red hemisphere not blue
+
