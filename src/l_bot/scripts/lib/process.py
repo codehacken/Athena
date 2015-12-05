@@ -8,6 +8,7 @@ from lib.image.common import utils
 from lib.image.color import detectColor as dc
 from lib.image.shape import shapeUtils as su
 
+import pickle
 # import language processing library
 from lib.lang.nlp import LanguageModule as lm
 
@@ -18,7 +19,15 @@ question_asked = False
 def initialize_model():
     # Write all initializations here.
     # The returned value is a joint model.
-    return None
+    try:
+        with open('data/pickle/passive_jointModelObject.pickle', 'rb') as handle:
+            jointModelObject = pickle.load(handle)
+    except EOFError:
+        print("Could not read joint model")
+        jointModelObject = None
+        pass
+
+    return jointModelObject
 
 # write the main processing node for the model
 # a joint model object is maintained in the main cpu loop
@@ -60,6 +69,10 @@ def add_example(cv_image, message, jointModelObject, print_message):
         jointModelObject.add_word_example_pair(keyword, imageData, "-")
 
     # Send ACK to output Node that the concept has been added.
+    # Pickle the data to store training information.
+    with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
+        pickle.dump(jointModelObject, handle)
+
     print_message("Example Object - Concept Added.")
 
 def test_example(cv_image, message, jointModelObject, print_message):
@@ -98,7 +111,7 @@ def test_example(cv_image, message, jointModelObject, print_message):
     print_message(" ")
 
     # print the conclusion
-    print_message("This is the " + str(type(maxScoreObj)) + " " + bestGuessWord)
+    print_message("This is the " + maxScoreObj._type_ + " " + bestGuessWord)
 
 def learn_example(cv_image, message, al_framework, print_message, ask_question):
     # convert cv image into processing format

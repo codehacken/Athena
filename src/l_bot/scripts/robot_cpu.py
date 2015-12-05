@@ -14,6 +14,8 @@ from lib.kinect import ImageConverter
 from lib.cpu import CpuNode
 from lib.process import initialize_model
 
+import sys
+
 def listener(joint_model):
     ic = ImageConverter()
     cpu = CpuNode(2, 'robot_cpu', '/robot/messages', ic, joint_model)
@@ -28,6 +30,21 @@ if __name__ == '__main__':
     This includes the model, the examples.
     Once the initializations are complete, then robot goes online.
     """
+    if len(sys.argv) == 1:
+        # This is a precomputed joint model.
+        joint_model = initialize_model()
+    elif len(sys.argv) == 2:
+        if(sys.argv[1] == "reset"):
+            joint_model = None
+        else:
+            # Exit when the command line argument is unknown.
+            print("Unknown command argument.")
+            exit(0)
+    else:
+        # Exit when the command line arguments are too many.
+        print("Too many arguments.")
+        exit(0)
+
     # This is a precomputed joint model.
     joint_model = initialize_model()
     listener(joint_model)
