@@ -239,6 +239,9 @@ class ObjSynonymColor(ObjWord):
 	# re-uses some of ObjWord but not as much as Color and Shape do
 	# only re-uses example addition code
 
+	# static type definition
+	_type_ = "Color"
+
 	# creating a word as a synonym for another word
 	# word: string
 	# synonym: string
@@ -269,6 +272,9 @@ class ObjSynonymShape(ObjWord):
 
 	# re-uses some of ObjWord but not as much as Color and Shape do
 	# only re-uses example addition code
+
+	# static type definition
+	_type_ = "Shape"
 
 	# creating a word as a synonym for another word
 	# word: string
