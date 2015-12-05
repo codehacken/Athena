@@ -32,7 +32,7 @@ def initialize_model():
 # write the main processing node for the model
 # a joint model object is maintained in the main cpu loop
 # later, a language model will also be maintained in main cpu loop
-def add_example(cv_image, message, jointModelObject, print_message):
+def add_example(cv_image, message, jointModelObject, print_message, example_count):
     # convert cv image into processing format
     # TODO: this needs to be corrected
     # we do not read a file
@@ -70,10 +70,13 @@ def add_example(cv_image, message, jointModelObject, print_message):
 
     # Send ACK to output Node that the concept has been added.
     # Pickle the data to store training information.
-    with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
-        pickle.dump(jointModelObject, handle)
+    # Store size is the number of examples after which the model is stored to a pickle file.
+    store_size = 20
+    if ((example_count % store_size) == 0):
+        with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
+            pickle.dump(jointModelObject, handle)
 
-    print_message("Example Object - Concept Added.")
+    print_message("Example Object - Concept Added. Number of Examples Added: " + str(example_count))
 
 def test_example(cv_image, message, jointModelObject, print_message):
     # convert cv image into processing format
@@ -156,7 +159,7 @@ def learn_example(cv_image, message, al_framework, print_message, ask_question):
 
     ask_question(msg_id, msg_str)
     """
-#    else:
+    #else:
     print_message("Do Something")
     #question_asked = False
 

@@ -92,7 +92,7 @@ class ObjWord:
 	# item 1: image corresponding to word
 	# item 2: image corresponding to word
 	def is_equal(self, item1, item2):
-		if(compare_items(item1, item2) >= self.get_duplicate_threshold()):
+		if(self.compare_items(item1, item2) >= self.get_duplicate_threshold()):
 			return True		
 		else:
 			return False
@@ -108,7 +108,7 @@ class ObjWord:
 		# check for any match
 		# more convoluted but faster this way because no if condition
 		for existingExample in existingExamples:
-			isKnown = isKnown or is_equal(example, existingExample)
+			isKnown = isKnown or self.is_equal(example, existingExample)
 
 		# return answer
 		return isKnown

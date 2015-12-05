@@ -14,6 +14,11 @@ from abc import ABCMeta, abstractmethod
 mode = {'active': 0, 'passive': 7}
 
 """
+_testing_folder_name = "data/people_testing_data"
+_training_folder_name = "data/people_training_data"
+"""
+
+"""
 This is the basic Node.
 Inherit the class for creating new sensor nodes.
 """
@@ -48,6 +53,19 @@ class RobotNode(object):
 
         # Initiate the Node.
         rospy.init_node(self.name, anonymous=True)
+
+        """
+        # File writing module.
+        self._rollover_cnt = 0
+        self._rollover_limit = 20
+
+        self.test_filename = "person" + str(self._rollover_cnt) + "_statements.txt"
+        self.training_filename = ""
+
+        # File Handles.
+        self._test_handle = None
+        self._train_handle = None
+        """
 
     # Execute commands according to map defined.
     def _process_message(self, message):
