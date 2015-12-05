@@ -178,6 +178,9 @@ null hypothesis is not a class. it is a conclusion if no class matches
 '''
 class ObjColor(ObjWord):
 	
+	# static type definition
+	_type_ = "Color"
+
 	# compare two items in terms of colors and get a score
 	# item 1: image 
 	# item 2: image 
@@ -206,6 +209,9 @@ class ObjColor(ObjWord):
 		return OW_COLOR_CLASSIFICATION_THRESHOLD
 
 class ObjShape(ObjWord):
+
+	# static type definition
+	_type_ = "Shape"
 
 	# compare two items in terms of shape and get a score
 	# item 1: image 
@@ -240,7 +246,7 @@ class ObjSynonymColor(ObjWord):
 	# only re-uses example addition code
 
 	# static type definition
-	_type_ = "Color"
+	_type_ = "Synonym Color"
 
 	# creating a word as a synonym for another word
 	# word: string
@@ -274,7 +280,7 @@ class ObjSynonymShape(ObjWord):
 	# only re-uses example addition code
 
 	# static type definition
-	_type_ = "Shape"
+	_type_ = "Synonym Shape"
 
 	# creating a word as a synonym for another word
 	# word: string
