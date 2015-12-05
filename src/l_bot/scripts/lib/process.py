@@ -99,49 +99,52 @@ def test_example(cv_image, message, jointModelObject, print_message):
     # print the conclusion
     print_message("This is the " + str(type(maxScoreObj)) + " " + bestGuessWord)
 
-def learn_example(cv_image, message, jointModelObject, print_message, ask_question, question_asked):
+def learn_example(cv_image, message, al_framework, print_message, ask_question):
     # convert cv image into processing format
     # TODO: this needs to be corrected
     # we do not read a file
     # we convert from one format to the other
     # image = utils.imageRead(imageFile)
 
-    if(not question_asked):
-        if cv_image == None:
-            print_message("Unable to capture an Image.")
-            return
+    print("Learning an Example....")
 
-        image = cv_image
+    #if(not question_asked):
+    """
+    if cv_image == None:
+        print_message("Unable to capture an Image.")
+        return
 
-        # extract color and shape of image
-        # image_copy = copy.copy(image)
-        cnt = utils.objectIdentification(cv_image)
-        [x, y, w, h] = utils.boundingRectangle(cnt)
-        pixNp = dc.findAllPixels(image, cnt, x, y, w, h)
-        pixNp = dc.findUniquePixels(pixNp)
+    image = cv_image
 
-        # store image data as dictionary
-        imageData = {'color': pixNp, 'shape': cnt}
-        print("Printing the size of RGB value " + str(len(pixNp)))
+    # extract color and shape of image
+    # image_copy = copy.copy(image)
+    cnt = utils.objectIdentification(cv_image)
+    [x, y, w, h] = utils.boundingRectangle(cnt)
+    pixNp = dc.findAllPixels(image, cnt, x, y, w, h)
+    pixNp = dc.findUniquePixels(pixNp)
 
-        # extract keywords from message
-        languageObject = lm(message)
-        [positiveLanguageData, negativeLanguageData] = languageObject.process_content()
+    # store image data as dictionary
+    imageData = {'color': pixNp, 'shape': cnt}
+    print("Printing the size of RGB value " + str(len(pixNp)))
 
-        # for each keyword
-        # add keyword, image pair to joint model
-        for keyword in positiveLanguageData:
-            jointModelObject.add_word_example_pair(keyword, imageData, "+")
+    # extract keywords from message
+    languageObject = lm(message)
+    [positiveLanguageData, negativeLanguageData] = languageObject.process_content()
 
-        for keyword in negativeLanguageData:
-            jointModelObject.add_word_example_pair(keyword, imageData, "-")
+    # for each keyword
+    # add keyword, image pair to joint model
+    for keyword in positiveLanguageData:
+        jointModelObject.add_word_example_pair(keyword, imageData, "+")
 
-        """
-        ask_question(msg_id, msg_str)
-        """
-    else:
-        print_message("Do Something")
-        question_asked = False
+    for keyword in negativeLanguageData:
+        jointModelObject.add_word_example_pair(keyword, imageData, "-")
+
+
+    ask_question(msg_id, msg_str)
+    """
+#    else:
+    print_message("Do Something")
+    #question_asked = False
 
     # Send ACK to output Node that the concept has been added.
     #print_message("Example Object - Concept Added.")

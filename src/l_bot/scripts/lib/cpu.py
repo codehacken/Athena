@@ -11,6 +11,7 @@ from process import add_example, test_example, learn_example
 from lib.framework import JointModel
 from lib.node import RobotNode
 from lib.transport import Message
+from lib.alframework import ALUniRobotDrivenModel
 
 class CpuNode(RobotNode):
     _input_node_id = 1
@@ -24,6 +25,10 @@ class CpuNode(RobotNode):
 
         if joint_model == None:
             self._joint_model = JointModel()
+
+        # Depending on the initialization, the joint model may be empty
+        # or not. Initialize the ALFramework here.
+        self.al_framework = ALUniRobotDrivenModel(self._joint_model)
 
     def send_print_message_to_op(self, msg_str):
         self.send_print_message(CpuNode._output_node_id, msg_str)
@@ -62,7 +67,7 @@ class CpuNode(RobotNode):
         # This is the passive learning implementation.
         # Associate the sentence with the image.
         if self._train_mode == True:
-            learn_example(self._ic.get_image(), message.message, self._joint_model,
+            learn_example(self._ic.get_image(), message.message, self.al_framework,
                           self.send_print_message_to_op, self.send_learn_example)
         else:
             msg_str = "Robot is in test mode, switch to training mode to add more examples."

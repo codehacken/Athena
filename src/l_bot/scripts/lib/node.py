@@ -11,7 +11,7 @@ import sys
 from abc import ABCMeta, abstractmethod
 
 # Constants.
-mode = {'active': 0, 'passive': 6}
+mode = {'active': 0, 'passive': 7}
 
 """
 This is the basic Node.
@@ -37,7 +37,8 @@ class RobotNode(object):
                                            3: 'recv_learn_example',
                                            4: 'recv_learn_example',
                                            5: 'recv_learn_example',
-                                           6: 'recv_add_example'},
+                                           6: 'recv_learn_example',
+                                           7: 'recv_add_example'},
                                   'print':{0: 'recv_print_message'}
         }
         ############################################################
