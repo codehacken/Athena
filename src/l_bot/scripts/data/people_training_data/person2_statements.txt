@@ -1,3 +1,4 @@
+Person 2
 Message: this looks like a green hemisphere
 Message: this is a three dimensional solid rectangle
 Message: a blue cylinder
@@ -17,3 +18,95 @@ Message: A long blue rectangle
 Message: This looks like blue solid triangle
 Message: this is a red hemisphere not blue
 
+Person 3
+Message: red cylinder
+Message: green not-cube
+Message: blue different-shape
+Message: greeny traingle
+Message: red wierd-shape
+Message: red triangle
+Message: red cube
+Message: blue cylinder
+Message: greeny cshape
+Message: blue cylinder
+Message: blue not-cube
+Message: red cshape
+Message: red cube
+Message: blue not rectangle
+Message: blue not cube
+Message: greeny trianglekind
+Message: green cube
+Message: green longrectangle
+Message: green differentrectangle
+Message: blue different_triangle
+Message: blue long_rectangle
+Message: red apple
+
+Person 4
+Message: this is a red half pipe placed horizontally so it looks like a rectangle
+Message: i am showing you a green cuboid which is a 3d rectangle
+Message: you see a red hemisphere now
+Message: here is not green but a blue cuboid
+Message: this is a red cube which is much smaller than a cuboid
+Message: this is a sideways placed thin cuboid
+Message: a blue cylinder like this looks the same from all angles
+Message: this is another blue cylinder but placed flat this time
+Message: this is a green traingle and not a cube]
+Message: if you like half pipes then here is a blue one for you
+Message: this is a red triangle and not a cuboid
+Message: here is a green cube
+Message: another cylinder here is a red one this time
+Message: this is a blue cuboid placed flat on the table
+Message: this green hemisphere is the opposite of a half pipe
+Message: here is another simple red object which in this case is a cube
+Message: there are too many rectangle and cuboid examples here like this green one
+Message: this is a red apple but for some reason it is placed upside down
+Message: this is a blue traingle placed side ways
+Message: this is a green triangle but it looks like a cuboid because of the angle at which it is placed
+Message: here we are back to a simple green cuboid
+
+Person 5
+Message: red rectangle with cyclinder cut out of it
+Message: blue rectangle
+Message: green triangle
+Message: green half cube
+Message: green rectangle
+Message: red cyclinder
+Message: blue rectangle
+Message: green triangle 3d
+Message: red cube
+Message: green cube
+Message: blue rectangle
+Message: red cube
+Message: red triangle 3d
+Message: blue rectangle with cyclinder cut out of it
+Message: blue cyclinder
+Message: blue rectangle
+Message: red half-circle 3d
+Message: green rectangle
+Message: red circular object
+
+Person 6
+Message: A blue three dimensional rectangular block
+Message: A green three dimensional block kept horizontally
+Message: A blue cylindrical object placed vertically
+Message: A red semi-cylinder placed on it's flat side
+Message: A blue three dimensional rectangle placed vertically
+Message: A red cube placed along it's diagonal axis
+Message: A red mini half-pipe
+Message: A blue wedge placed along it's long base
+Message: A blue half-pipe model
+Message: A green semi-cylinder
+Message: A red blurry cylinder placed vertically
+Message: a red cube which has nothing amazing to be said about it
+Message: A red wedge placed along it's major base
+Message: a green plank oriented away from me
+Message: ^[g^[r^[e^[e^[n^[[3;3~^[a^[d^[f^[a^[^[^[^[^[n^[v^[^A^[^A^[^[ A green triangular bump
+Message: A blue long plank placed with long axis perpendicular to line of sight
+Message: green rectangular cube placed vertical
+Message: blue short plank placed along it's narrower surface
+Message: a green cube
+Message: a green wedge placed on it's longer base
+Message: a red apple placed on it's tip
+Message: blue rectangluar plank again
+Message:
