@@ -13,6 +13,9 @@ class LanguageModule:
      self.tokenized = custom_sent_tokenizer.tokenize(sentence)
 
   def process_content(self):
+     # Initialize the negative nouns.
+     negative_nouns = []
+
      keywordList=[]
      rule1="""Chunk: {<DT>?<JJ>?<NN>}"""
      rule2="""Chunk:{<DT><NN>}"""
@@ -53,8 +56,13 @@ class LanguageModule:
                                  'figure','geometric','picture','depicts','surface'
                                   ,'equal','length','shape']]
      negative_adverbs=[keyword[keyword.index(word)+1][0] for word in keyword if word[0] in ['not','Not']]
-     negative_nouns= [keyword[keyword.index(word)+2][0] for word in keyword if word[0] in ['not','Not'] 
-                      and keyword[keyword.index(word)+2][1] in ['NN'] ]
+     try:
+        negative_nouns= [keyword[keyword.index(word)+2][0] for word in keyword if word[0] in ['not','Not']
+                         and keyword[keyword.index(word)+2][1] in ['NN'] ]
+     except:
+         pass
+
+
      negative_examples=negative_adverbs+negative_nouns
      positive_examples=[positive_word for positive_word in keyword if  positive_word[0] not in [item1 for item1 in negative_examples]]
      positive_examples=[positive_example[0] for positive_example in positive_examples 
