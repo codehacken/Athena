@@ -4,3 +4,5 @@ devel/
 *.pyc
 *.tar.gz
 *.jpg
+*.pickle
+
