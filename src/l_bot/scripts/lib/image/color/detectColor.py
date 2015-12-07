@@ -90,12 +90,37 @@ def findUniquePixels(pixNp):
    pixNp = set(map(tuple,pixNp))
    return pixNp
 
-def compare_items(pix1, pix2):
-   #print(dir(pix1))
-   inter = pix1.intersection(pix2)
-   #print(inter)
+def changeScale(pix,scale):
+   retPix = []
+   for item in pix :
+      (r,g,b) = item
+      x = [r/scale,g/scale,b/scale]
+      retPix.append(x)
+   retPix1 = np.array(retPix)
+   return retPix1
+
+
+def intersection(A,B):
+   i = len(A)
+   j = len(B)
+   if i < j :
+      ln = A
+      other = B
+   else:
+      ln = B
+      other = A
+
+   inter = []
+   for index in range(len(ln)):
+      if ln[index] in other :
+         inter.append(ln[index])
+   return inter
+
+
+def compare_items(nPix1, nPix2):
+   pix1 = changeScale(nPix1,8)
+   pix2 = changeScale(nPix2,8)
+   inter = intersection(pix1,pix2)
    equalRate = float(len(pix1) - len(inter))/float(len(pix1))
    equalRate = 1.0 - equalRate
-   #print "Color is compared : ", equalRate
    return equalRate
-
