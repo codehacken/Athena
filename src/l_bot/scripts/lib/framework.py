@@ -422,6 +422,7 @@ class JointModel:
 
 		# check all classifiers related to this word
 		for classifier in self.knownWords[word]:
+			print(word, str(classifier))
 			if("Synonym" not in str(type(classifier))):
 				# use non-synonym classifiers directly
 				probabilityScore = classifier.calculate_probability_score(example)
