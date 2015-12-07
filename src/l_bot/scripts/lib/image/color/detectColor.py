@@ -117,10 +117,14 @@ def intersection(A,B):
    return inter
 
 
+
 def compare_items(nPix1, nPix2):
-   pix1 = changeScale(nPix1,8)
-   pix2 = changeScale(nPix2,8)
-   inter = intersection(pix1,pix2)
+   pix1 = np.array(list(nPix1)) / 8
+   pix2 = np.array(list(nPix2)) / 8
+   pix1 = findUniquePixels(pix1)
+   pix2 = findUniquePixels(pix2)
+   inter = pix1.intersection(pix2)
    equalRate = float(len(pix1) - len(inter))/float(len(pix1))
    equalRate = 1.0 - equalRate
+   
    return equalRate
