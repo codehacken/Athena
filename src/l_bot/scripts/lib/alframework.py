@@ -9,7 +9,8 @@ __author__      = "Nisha Pillai"
 __email__       = "npillai1@umbc.edu"
 
 from framework import JointModel as jm
-
+from framework import ObjSynonymColor as ObjColor
+from framework import ObjSynonymShape as ObjShape
 
 # JointModel constants
 JM_GUESS_SCORE_THRESHOLD = 0.8
@@ -17,6 +18,7 @@ JM_GUESS_SCORE_THRESHOLD = 0.8
 BEST_SYN_SCORE = 0.7
 BEST_SIM_SCORE = 0.95
 BEST_NEG_SYN_SCORE = 0.4
+LEAST_LOW_SCORE    = 0.3
 
 AL_QUESTIONNAIRE = {1 : "What is this?", 
                     2 : "Is this same as ", 
@@ -45,7 +47,8 @@ class ALUniRobotDrivenModel:
                 self.negSynCandidates = []
                 self.wordInQuestion = ""  
                 self.newWords = []
-   
+                self.counter = 0  
+                self.lowConfCandidates = []
 
         def prepare_questions(self,example):
            for word in self.jModel.knownWords.keys():
@@ -61,6 +64,21 @@ class ALUniRobotDrivenModel:
            self.synCandidates = list(set(self.synCandidates))
            self.negSynCandidates = list(set(self.negSynCandidates))
         
+        def prepareLowConfQuestions(self):
+           self.lowConfCandidates = []
+           probScores = self.jModel.get_known_words()
+           totScore = 0.0
+           lowScores = []
+           for word,score in probScores.items() :
+              totScore += score
+              if score < LEAST_LOW_SCORE :
+                 lowScores.append(word)
+
+           avScore = float(totScore)/float(len(propScores))
+           if avScore > 0.5 :
+              self.lowConfCandidates = lowScores      
+     
+
         def arRemove(self,candidates,word):
            temp = set(candidates)
            if word in temp:
@@ -78,20 +96,15 @@ class ALUniRobotDrivenModel:
               self.jModel.add_word_example_pair(word, example, examplePolarity)
               self.wordRemovalfromQuestCandidates(word)
 
-        def differentWordAdd(self,word1,word2,example,examplePolarity) :
-           wordClassifiers = self.jModel.knownWords[word1]
-
-           for classifier in wordClassifiers:
-                classifier.add_example(example,examplePolarity,1)
-
+        def differentWordAdd(self,word2,example,examplePolarity) :
+           self.jModel.add_word_example_pair(word2, example, examplePolarity)
 
         def wordSynAdd(self,word1,word2,example,examplePolarity) :
            wordClassifiers = self.jModel.knownWords[word1]
-
-           for classifier in wordClassifiers:
-                if("Synonym" in str(type(classifier))):
-                   classifier.add_example(example,examplePolarity,1)
-
+           cObj = ObjColor(word1, word2, example, examplePolarity)
+           sObj = ObjShape(word1, word2, example, examplePolarity)
+           wordClassifiers.append(cObj)
+           wordClassifiers.append(sObj)
 
         def wordAddPositiveExample(self,words,example) :
            word = words[0]
@@ -101,8 +114,7 @@ class ALUniRobotDrivenModel:
            else :
               examplePolarity = "-"
            word2 = self.wordInQuestion
-           for word1 in self.newWords :
-              self.differentWordAdd(word1,word2,example,examplePolarity) 
+           self.differentWordAdd(word2,example,examplePolarity) 
            self.wordRemovalfromQuestCandidates(word2)
 
 
@@ -125,8 +137,8 @@ class ALUniRobotDrivenModel:
            word = words[0]
            word = word.lower()
            examplePolarity = "-"
+           word2 = self.wordInQuestion
            if word == "yes" or word == "y" :
-              word2 = self.wordInQuestion
               for word1 in self.newWords :
                  self.wordSynAdd(word1,word2,example,examplePolarity)
 
@@ -146,6 +158,11 @@ class ALUniRobotDrivenModel:
                 wordSize = len(words)
                 self.questionFlag = 0
                 if qType == 0 :
+                   self.counter = self.counter + 1
+                   if self.counter % 20 == 0 :
+                      self.prepareLowConfQuestions()
+                   else :
+                      self.lowConfCandidates = []
                    #self.prepare_questions(example)
                    if wordSize == 0 :
                       self.questionFlag = 1
@@ -168,19 +185,20 @@ class ALUniRobotDrivenModel:
                       if word == 'no' :   # answer is changable according to majority opinion
                          pass
                    word2 = self.wordInQuestion
-                   self.differentWordAdd(word2,word2,example,examplePolarity) 
+                   self.differentWordAdd(word2,example,examplePolarity) 
                    self.wordRemovalfromQuestCandidates(word2)
-     
-                    
+                
+      
                 if(self.questionFlag == 1) :
                    sentenceInReturn = AL_QUESTIONNAIRE[self.questionFlag]
                 else :
                       ##Need to add fifth question
-                   if len(self.synCandidates) == 0 and len(self.simCandidates) == 0 and len(self.negSynCandidates) == 0 :
-                      self.wordInQuestion = ""
-                      self.newWords = []
-                      self.questionFlag = 6
-                      sentenceInReturn = AL_QUESTIONNAIRE[self.questionFlag]
+                   if len(self.synCandidates) == 0 and len(self.simCandidates) == 0 and len(self.negSynCandidates) == 0 and len(self.lowConfCandidates) == 0 :
+                         self.wordInQuestion = ""
+                         self.newWords = []
+                         self.questionFlag = 6
+                         sentenceInReturn = AL_QUESTIONNAIRE[self.questionFlag]
+                         
                    else :
                       if len(self.simCandidates) > 0 :
                          self.wordInQuestion = self.simCandidates.pop()
@@ -191,6 +209,9 @@ class ALUniRobotDrivenModel:
                       elif len(self.negSynCandidates) > 0 :
                          self.wordInQuestion = self.negSynCandidates.pop()
                          self.questionFlag = 4
+                      elif len(self.lowConfCandidates) > 0 :
+                         self.wordInQuestion = self.lowConfCandidates.pop()
+                         self.questionFlag = 5
              
                       sentenceInReturn =  AL_QUESTIONNAIRE[self.questionFlag] + self.wordInQuestion + " ? "
 
