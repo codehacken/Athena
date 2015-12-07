@@ -181,12 +181,26 @@ class ObjColor(ObjWord):
 	# static type definition
 	_type_ = "Color"
 
+	# static computation table
+	_computation_table_ = {}
+
 	# compare two items in terms of colors and get a score
 	# item 1: image 
 	# item 2: image 
 	def compare_items(self, item1, item2):
-		# exctract colors from two images and compare them		
-		return dc.compare_items(item1['color'], item2['color'])
+
+		# check if the value is already computed
+		combinationName1 = str(item1) + str(item2)
+		combinationName2 = str(item2) + str(item1)
+	
+		if(combinationName1 in _computation_table_.keys())
+			return _computation_table_[combinationName1]
+		elif(combinationName2 in _computation_table_.keys())):
+			return _computation_table_[combinationName2]
+		else:
+			# exctract colors from two images and compare them		
+			_computation_table_[combinationName1] = dc.compare_items(item1['color'], item2['color'])
+			return _computation_table_[combinationName1]
 
 	# score for two duplicate items being compared
 	# score varies with comparison method and is therefore class dependent
@@ -212,14 +226,28 @@ class ObjShape(ObjWord):
 
 	# static type definition
 	_type_ = "Shape"
+	
+	# static computation table
+	_computation_table_ = {}
 
 	# compare two items in terms of shape and get a score
 	# item 1: image 
 	# item 2: image
 	def compare_items(self, item1, item2):
-		# exctract shapes from two images and compare them		
-		return su.compare_items(item1['shape'], item2['shape'])
-		
+	
+		# check if the value is already computed
+		combinationName1 = str(item1) + str(item2)
+		combinationName2 = str(item2) + str(item1)
+	
+		if(combinationName1 in _computation_table_.keys())
+			return _computation_table_[combinationName1]
+		elif(combinationName2 in _computation_table_.keys())):
+			return _computation_table_[combinationName2]
+		else:
+			# exctract shapes from two images and compare them		
+			_computation_table_[combinationName1] = su.compare_items(item1['shape'], item2['shape'])
+			return _computation_table_[combinationName1]
+
 	# score for two duplicate items being compared
 	# score varies with comparison method and is therefore class dependent
 	def get_duplicate_threshold(self):
