@@ -7,6 +7,7 @@ AUTHOR: Ashwinkumar Ganesan, Karan K. Budhraja, Nisha Pillai, Gurpreet Singh.
 from lib.image.common import utils
 from lib.image.color import detectColor as dc
 from lib.image.shape import shapeUtils as su
+from time import ctime
 
 import pickle
 # import language processing library
@@ -102,18 +103,20 @@ def test_example(cv_image, message, jointModelObject, print_message):
     imageData = {'color': pixNp, 'shape': cnt}
     print("Printing the size of RGB value " + str(len(pixNp)))
 
+    print(ctime())
     # call novel scene
     [isConfidentGuess, bestGuessWord, bestGuessObj, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores] = jointModelObject.classify_example(imageData)
 
     # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
     for idx, word in enumerate(wordMaxProabilityScores):
-        print_message(str(idx+1) + " " wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]))
+        print_message(str(idx+1) + " " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]))
 
     # print new line for cleanliness
     print_message(" ")
 
     # print the conclusion
     print_message("This is the " + bestGuessObj._type_ + " " + bestGuessWord)
+    print(ctime())
 
 def learn_example(cv_image, message, al_framework, print_message, ask_question):
     # convert cv image into processing format

@@ -193,14 +193,14 @@ class ObjColor(ObjWord):
 		combinationName1 = str(item1) + str(item2)
 		combinationName2 = str(item2) + str(item1)
 	
-		if(combinationName1 in _computation_table_.keys())
-			return _computation_table_[combinationName1]
-		elif(combinationName2 in _computation_table_.keys())):
-			return _computation_table_[combinationName2]
+		if(combinationName1 in ObjColor._computation_table_.keys()):
+			return ObjColor._computation_table_[combinationName1]
+		elif(combinationName2 in ObjColor._computation_table_.keys()):
+			return ObjColor._computation_table_[combinationName2]
 		else:
 			# exctract colors from two images and compare them		
-			_computation_table_[combinationName1] = dc.compare_items(item1['color'], item2['color'])
-			return _computation_table_[combinationName1]
+			ObjColor._computation_table_[combinationName1] = dc.compare_items(item1['color'], item2['color'])
+			return ObjColor._computation_table_[combinationName1]
 
 	# score for two duplicate items being compared
 	# score varies with comparison method and is therefore class dependent
@@ -239,14 +239,14 @@ class ObjShape(ObjWord):
 		combinationName1 = str(item1) + str(item2)
 		combinationName2 = str(item2) + str(item1)
 	
-		if(combinationName1 in _computation_table_.keys())
-			return _computation_table_[combinationName1]
-		elif(combinationName2 in _computation_table_.keys())):
-			return _computation_table_[combinationName2]
+		if(combinationName1 in ObjShape._computation_table_.keys()):
+			return ObjShape._computation_table_[combinationName1]
+		elif(combinationName2 in ObjShape._computation_table_.keys()):
+			return ObjShape._computation_table_[combinationName2]
 		else:
 			# exctract shapes from two images and compare them		
-			_computation_table_[combinationName1] = su.compare_items(item1['shape'], item2['shape'])
-			return _computation_table_[combinationName1]
+			ObjShape._computation_table_[combinationName1] = su.compare_items(item1['shape'], item2['shape'])
+			return ObjShape._computation_table_[combinationName1]
 
 	# score for two duplicate items being compared
 	# score varies with comparison method and is therefore class dependent
