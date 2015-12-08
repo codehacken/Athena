@@ -517,6 +517,7 @@ class JointModel:
 
 		# maintain best guess
 		bestGuessWord = ""
+		bestGuessObj = ""
 		bestGuessMaxScore = 0
 	
 		# calculate word probability scores
@@ -533,12 +534,13 @@ class JointModel:
 					maxScoreObj = classifier
 
 			# add to probability scores
-			wordMaxProabilityScores[word] = maxScore
+			wordMaxProabilityScores[word] = [maxScore, maxScoreObj]
 			wordProbabilityScores[word] = [isWordExampleConsistent, probabilityScores]
 
 			# update best guess if possible
 			if(maxScore > bestGuessMaxScore):
 				bestGuessWord = word
+				bestGuessObj = maxScoreObj
 				bestGuessMaxScore = maxScore
 
 		# guess confidence
@@ -549,7 +551,7 @@ class JointModel:
 			isConfidentGuess = True
 		
 		# return everything known to man
-		return [bestGuessWord, isConfidentGuess, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores, maxScoreObj]
+		return [isConfidentGuess, bestGuessWord, bestGuessObj, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores]
 		
 	'''
 	experiment: novel english
