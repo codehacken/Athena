@@ -103,18 +103,17 @@ def test_example(cv_image, message, jointModelObject, print_message):
     print("Printing the size of RGB value " + str(len(pixNp)))
 
     # call novel scene
-    [bestGuessWord, isConfidentGuess, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores,
-     maxScoreObj] = jointModelObject.classify_example(imageData)
+    [isConfidentGuess, bestGuessWord, bestGuessObj, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores] = jointModelObject.classify_example(imageData)
 
     # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
     for idx, word in enumerate(wordMaxProabilityScores):
-        print_message(str(idx+1) + " " + word + " " + str(wordMaxProabilityScores[word]))
+        print_message(str(idx+1) + " " wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]))
 
     # print new line for cleanliness
     print_message(" ")
 
     # print the conclusion
-    print_message("This is the " + maxScoreObj._type_ + " " + bestGuessWord)
+    print_message("This is the " + bestGuessObj._type_ + " " + bestGuessWord)
 
 def learn_example(cv_image, message, al_framework, print_message, ask_question):
     # convert cv image into processing format
