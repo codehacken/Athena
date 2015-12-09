@@ -158,7 +158,7 @@ class ObjWord:
 				correctExamples += 1
 
 		# compute p(example|word)
-		#print("correct examples: " + str(correctExamples))
+		print("correct examples: " + str(correctExamples))
 		totalExamples = len(positiveExamples) + len(negativeExamples)
 		pExampleGivenWord = correctExamples/float(totalExamples)
 
@@ -167,7 +167,10 @@ class ObjWord:
 		# consider non-normalized version of p(word) to calculate score
 		# probabilityScore = pExampleGivenWord*totalExamples cancels totalExamples
 		# so we can use just correctExamples
-		probabilityScore = correctExamples
+		# probabilityScore = correctExamples
+
+		# using pExampleGivenWord for now
+		probabilityScore = pExampleGivenWord
 
 		# return the score
 		return probabilityScore
