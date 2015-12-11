@@ -36,11 +36,14 @@ since the model is data driven, we do not need to train classifiers. we simply s
 '''
 class ALUniRobotDrivenModel:
 
-        # creating an empty model
-        def __init__(self):
+        # creating an empty model if the joint model is not passed to it.
+        def __init__(self, joint_model=None):
                 # known words and their classifiers
-                self.jModel = jm()
-              
+                if joint_model == None:
+                    self.jModel = jm()
+                else:
+                    self.jModel = joint_model
+                
                 self.questionFlag = 0      
                 self.synCandidates = []
                 self.simCandidates = []
