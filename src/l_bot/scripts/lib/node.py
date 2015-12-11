@@ -36,13 +36,13 @@ class RobotNode(object):
                                   'test':{0: 'recv_test',
                                           1: 'recv_test_case'},
                                   'exit':{0: 'recv_exit'},
-                                  'learn':{0: 'recv_learn_example',
+                                  'learn':{0: 'recv_start_exchange',
                                            1: 'recv_learn_example',
                                            2: 'recv_learn_example',
                                            3: 'recv_learn_example',
                                            4: 'recv_learn_example',
                                            5: 'recv_learn_example',
-                                           6: 'recv_learn_example',
+                                           6: 'recv_end_exchange',
                                            7: 'recv_add_example'},
                                   'print':{0: 'recv_print_message'}
         }
@@ -138,6 +138,13 @@ class RobotNode(object):
 
     def send_learn_example(self):
         pass
+    
+    def send_start_exchange(self):
+        pass
+    
+    def send_end_exchange(self, message):
+        pass
+    
     ####################################################################
     # Functions to perform operations when commands are received.
     def recv_train(self, message):
@@ -168,4 +175,10 @@ class RobotNode(object):
         pass
 
     def recv_learn_example(self, message):
+        pass
+
+    def recv_start_exchange(self, message):
+        pass
+    
+    def recv_end_exchange(self, message):
         pass

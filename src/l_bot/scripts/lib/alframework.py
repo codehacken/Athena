@@ -241,7 +241,6 @@ class ALUniRobotDrivenModel:
 
 
         # This function processes the image received from the kinect.
-        @staticmethod
         def processImage(self, cv_image):
             image = cv_image
 
@@ -261,7 +260,6 @@ class ALUniRobotDrivenModel:
 
         
         # This function processes the language from the 
-        @staticmethod
         def processLanguage(self, message):
             # extract keywords from message
             languageObject = lm(message)

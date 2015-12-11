@@ -7,7 +7,7 @@ AUTHOR: Ashwinkumar Ganesan.
 __author__ = 'Ashwinkumar Ganesan'
 
 # ROS.
-from process import add_example, test_example, learn_example
+from process import add_example, test_example, learn_example, start_conversation
 from lib.framework import JointModel
 from lib.node import RobotNode
 from lib.transport import Message
@@ -41,11 +41,18 @@ class CpuNode(RobotNode):
         msg = Message(self._t_layer._id, -1, 'learn',
                       msg_id, msg_str)
         self.send_message(msg)
-
+        
+    # The node send a message to end the conversation and start again.
+    def send_end_exchange(self, msg_str):
+        msg = Message(self._t_layer._id, -1, 'learn',
+                      6, msg_str)
+        self.send_message(msg)
+    
     """
     Receive a message from the user describing the object that
     is placed in front on the robot.
     """
+    
     def recv_add_example(self, message):
         # This is the passive learning implementation.
         # Associate the sentence with the image.
@@ -71,8 +78,22 @@ class CpuNode(RobotNode):
         # This is the passive learning implementation.
         # Associate the sentence with the image.
         if self._train_mode == True:
-            learn_example(self._ic.get_image(), message.message, self.al_framework,
-                          self.send_print_message_to_op, self.send_learn_example)
+            learn_example(self._ic.get_image(), message.message, message.type, self.al_framework,
+                          self.send_print_message_to_op, self.send_learn_example, 
+                          self.send_end_exchange)
         else:
             msg_str = "Robot is in test mode, switch to training mode to add more examples."
             self.send_print_message_to_op(msg_str)
+     
+    # This is the task to be performed when you initiate a conversation.
+    def recv_start_exchange(self, message):
+        # This is the passive learning implementation.
+        # Associate the sentence with the image.
+        if self._train_mode == True:
+            start_conversation(self._ic.get_image(), message.message, self.al_framework,
+                          self.send_print_message_to_op, self.send_learn_example,
+                          self.send_end_exchange)
+        else:
+            msg_str = "Robot is in test mode, switch to training mode to add more examples."
+            self.send_print_message_to_op(msg_str)
+

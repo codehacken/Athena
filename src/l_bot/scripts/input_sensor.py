@@ -33,9 +33,21 @@ class InputNode(RobotNode):
         msg = Message(self._t_layer._id, self._cpu_id, 'learn',
                       self._msg_state, msg_str)
         self.send_message(msg)
+    
+    # This is the message to start the conversation with the Robot in Active Learning.
+    # Send a 0 to start a conversation.
+    def send_start_exchange(self):
+        msg = Message(self._t_layer._id, self._cpu_id, 'learn',
+                      0, msg_str)
+        self.send_message(msg)
 
     def recv_learn_example(self, message):
+        print(message.message)
         self._msg_state = message.type
+
+    # This is to reset the conversation when end exchange message is received.
+    def recv_end_exchange(self, message):
+        self._msg_state = 0
 
     # send input
     def send_input(self):
@@ -50,6 +62,8 @@ class InputNode(RobotNode):
                 self.send_test()
             elif (user_input == "train"):
                 self.send_train()
+            elif (self._msg_state == 0):
+                self.send_start_exchange()
             else:
                 # Check for train or test mode.
                 if self._train_mode == True:

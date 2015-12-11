@@ -134,52 +134,27 @@ def test_example(cv_image, message, jointModelObject, print_message):
     print_message("This is the " + bestGuessObj._type_ + " " + bestGuessWord)
     print(ctime())
 
-def learn_example(cv_image, message, al_framework, print_message, ask_question):
-    # convert cv image into processing format
-    # TODO: this needs to be corrected
-    # we do not read a file
-    # we convert from one format to the other
-    # image = utils.imageRead(imageFile)
-
-    print("Learning an Example....")
-
-    #if(not question_asked):
-    """
-    if cv_image == None:
-        print_message("Unable to capture an Image.")
-        return
-
-    image = cv_image
-
-    # extract color and shape of image
-    # image_copy = copy.copy(image)
-    cnt = utils.objectIdentification(cv_image)
-    [x, y, w, h] = utils.boundingRectangle(cnt)
-    pixNp = dc.findAllPixels(image, cnt, x, y, w, h)
-    pixNp = dc.findUniquePixels(pixNp)
-
-    # store image data as dictionary
-    imageData = {'color': pixNp, 'shape': cnt}
-    print("Printing the size of RGB value " + str(len(pixNp)))
-
-    # extract keywords from message
-    languageObject = lm(message)
-    [positiveLanguageData, negativeLanguageData] = languageObject.process_content()
-
-    # for each keyword
-    # add keyword, image pair to joint model
-    for keyword in positiveLanguageData:
-        jointModelObject.add_word_example_pair(keyword, imageData, "+")
-
-    for keyword in negativeLanguageData:
-        jointModelObject.add_word_example_pair(keyword, imageData, "-")
-
-
-    ask_question(msg_id, msg_str)
-    """
-    #else:
-    print_message("Do Something")
-    #question_asked = False
-
-    # Send ACK to output Node that the concept has been added.
-    #print_message("Example Object - Concept Added.")
+# This function used to send questions for the user to answer while using
+# Active Learning.
+def learn_example(cv_image, message, msg_id, al_framework, print_message, 
+                  ask_question, end_exchange):
+    print_message("Asking Question....")
+    [msg_id, msg_str] = al_framework.add_word_example_pair(msg_id, cv_image, message)
+    if msg_id = 6:
+        print_message("End Conversation....")
+        print_message(msg_str)
+        end_exchange(msg_str)
+    else:
+        ask_question(msg_id, msg_str)
+    
+# This function is to start the conversation with the Robot while using Active Learning.
+def start_conversation(cv_image, message, al_framework, print_message, ask_question, end_exchange):
+    print("Starting a Conversation....")
+    print_message("Starting a Conversation....")
+    [msg_id, msg_str] = al_framework.add_word_example_pair(0, cv_image, "")
+    if msg_id = 6:
+        print_message("End Conversation....")
+        print_message(msg_str)
+        end_exchange(msg_str)
+    else:
+        ask_question(msg_id, msg_str)
