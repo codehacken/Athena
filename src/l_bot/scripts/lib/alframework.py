@@ -156,14 +156,19 @@ class ALUniRobotDrivenModel:
            self.wordRemovalfromQuestCandidates(word2)
 
 
-        
+
 
         # add a word-example pair to the model
         # word: string
         # example: image
         # example polairty: global definition (constant)
-        def add_word_example_pair(self,qType, words, example, examplePolarity):
-
+        def add_word_example_pair(self,qType,cv_image,message):
+                example = self.processImage(cv_image)
+                words = []
+                if qType != 1 :
+                   words = [message]
+                   examplePolarity = "+"
+                
                 #Default Return sentence
                 sentenceInReturn = ""
                 wordSize = len(words)
@@ -175,14 +180,19 @@ class ALUniRobotDrivenModel:
                    else :
                       self.lowConfCandidates = []
                    #self.prepare_questions(example)
-                   if wordSize == 0 :
-                      self.questionFlag = 1
-                   else :
-                      self.wordsAdd(words,example,examplePolarity)
+                   self.questionFlag = 1
+                   #if wordSize == 0 :
+                   #   self.questionFlag = 1
+                   #else :
+                   #   self.wordsAdd(words,example,examplePolarity)
                 elif qType == 1 :
                    self.prepare_questions(example)
-                   if wordSize > 0 :
-                      self.wordsAdd(words,example,examplePolarity)
+                   [positiveLanguageData, negativeLanguageData] = self.processLanguage(message)
+                   if len(positiveLanguageData) > 0 :
+                      self.wordsAdd(positiveLanguageData,example,"+")
+                   if len(negativeLanguageData) > 0 :
+                      self.wordsAdd(negativeLanguageData,example,"-")
+
                 elif qType == 2 :
                    self.wordAddPositiveExample(words,example)
                 elif qType == 3 :
@@ -196,6 +206,7 @@ class ALUniRobotDrivenModel:
                       if word == 'no' :   # answer is changable according to majority opinion
                          pass
                    word2 = self.wordInQuestion
+                   examplePolarity = "+"
                    self.differentWordAdd(word2,example,examplePolarity) 
                    self.wordRemovalfromQuestCandidates(word2)
                 
