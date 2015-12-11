@@ -63,7 +63,7 @@ class ALUniRobotDrivenModel:
 
         def prepare_questions(self,example):
            for word in self.jModel.knownWords.keys():
-              [isWordExampleConsistent, probabilityScores] = self.jModel.classify_word_example(word, example)
+              [isWordExampleConsistent, probabilityScores,pExampleGivenWordValues] = self.jModel.classify_word_example(word, example)
               for score in probabilityScores.values():
                  if score >= BEST_SIM_SCORE:
                     self.simCandidates.append(word)
