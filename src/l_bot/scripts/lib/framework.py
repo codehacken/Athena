@@ -92,6 +92,7 @@ class ObjWord:
 	# item 1: image corresponding to word
 	# item 2: image corresponding to word
 	def is_equal(self, item1, item2):
+                print "---->",self.get_duplicate_threshold()
 		if(self.compare_items(item1, item2) >= self.get_duplicate_threshold()):
 			return True		
 		else:
