@@ -157,7 +157,7 @@ class RobotNode(object):
 
     def recv_exit(self, message):
         print("Node Exiting.....")
-        sys.exit()
+        rospy.signal_shutdown("Shutdown!")
 
     def recv_print_message(self, message):
         print(message.message)

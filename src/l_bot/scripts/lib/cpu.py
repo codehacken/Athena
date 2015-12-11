@@ -15,6 +15,9 @@ from lib.alframework import ALUniRobotDrivenModel
 import pickle
 import sys
 
+# Shutdown.
+import rospy
+
 class CpuNode(RobotNode):
     _input_node_id = 1
     _output_node_id = 3
@@ -106,4 +109,6 @@ class CpuNode(RobotNode):
         print("Node Exiting.....")
         with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
             pickle.dump(self._joint_model, handle)
-        sys.exit()
+            
+        rospy.signal_shutdown("CPU Shutdown!")
+
