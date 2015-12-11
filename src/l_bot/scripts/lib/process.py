@@ -107,10 +107,26 @@ def test_example(cv_image, message, jointModelObject, print_message):
     # call novel scene
     [isConfidentGuess, bestGuessWord, bestGuessObj, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores] = jointModelObject.classify_example(imageData)
 
+    # form a dictionary of score: word
+    wordScoreDictionary = {}
+    for word in wordMaxProabilityScores:
+        if(wordMaxProabilityScores[word][0] not in wordScoreDictionary.keys()):
+            wordScoreDictionary[wordMaxProabilityScores[word][0]] = [word]
+        else:
+            wordScoreDictionary[wordMaxProabilityScores[word][0]].append(word)
+
+    # now print these in ascending order
+    idx = 0
+    for wordScore in sorted(wordScoreDictionary.keys(),reverse=True):
+        for word in wordScoreDictionary[wordScore]:
+            print_message(str(++idx) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][0]) + ")")
+
     # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
+    '''
     for idx, word in enumerate(wordMaxProabilityScores):
         print_message(str(idx+1) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][0]) + ")")
-
+    '''
+    
     # print new line for cleanliness
     print_message(" ")
 
