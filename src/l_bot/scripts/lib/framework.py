@@ -11,6 +11,7 @@ from abc import ABCMeta
 from abc import abstractmethod
 from lib.image.color import detectColor as dc
 from lib.image.shape import shapeUtils as su
+import sets
 
 # ObjWord constants
 # possible example polarities
@@ -141,7 +142,24 @@ class ObjWord:
 	
 		# add additional negative examples if any
 		negativeExamples = self.negativeExamples + additionalNegatveExamples
+	
+		# filter duplicated in examples
+		seenExamples = []
+		for positiveExample in positiveExamples:
+			if(positiveExample not in seenExamples):
+				seenExamples.append(positiveExample)
+		positiveExamples = seenExamples
+			
+		'''
+		examplesAsStrings = list(set(map(lambda x: str(x), positiveExamples)))
+		filteredPositiveExamples = map(lambda x: eval(x), examplesAsStrings)
+		positiveExamples = filteredPositiveExamples
 
+		examplesAsStrings = set(map(lambda x: str(x), negativeExamples))
+		filteredNegativeExamples = map(lambda x: eval(x), examplesAsStrings)
+		negativeExamples = filteredNegativeExamples
+		'''
+		
 		# check against this classifier
 		correctExamples = 0
 
@@ -366,6 +384,8 @@ class JointModel:
 			# get all examples corresponding to this word
 			# it is stored in any non-synonym classifier
 			wordClassifier = ""
+			wordColorCount = 0
+			wordShapeCount = 0
 			
 			for classifier in self.knownWords[word]:
 				if("Synonym" not in str(type(classifier))):
@@ -383,7 +403,16 @@ class JointModel:
 				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example)		
 				maximumProbabilityScore = max(probabilityScores.values())
 				totalPositiveScore += maximumProbabilityScore
-
+		
+				# store the (first) classifier type for which the score is maximum
+				for classifier in probabilityScores.keys():
+					if(probabilityScores[classifier] == maximumProbabilityScore):
+						if("Color" in classifier._type_):
+							wordColorCount += 1
+						else:
+							wordShapeCount += 1
+						break
+					
 			# process positive images
 			totalNegativeScore = 0.0
 			for example in wordNegativeExamples:
@@ -402,7 +431,14 @@ class JointModel:
 			if(len(wordNegativeExamples) > 0):
 				totalScore -= totalNegativeScore/len(wordNegativeExamples)
 			
-			probabilityScores[word] = totalScore		
+			# assign final shape
+			classifierType = ""
+			if(wordColorCount > wordShapeCount):
+				classifierType = "Color"
+			else:
+				classifierType = "Shape"
+			
+			probabilityScores[word] = [totalScore, classifierType]		
 
 		# return dictionary of known words
 		return probabilityScores
@@ -564,7 +600,7 @@ class JointModel:
 	'''
 	experiment: novel english
 	'''	
-	# TODO
+	# e.g. "this is a blue cube"
 	def classify_word(self, word):
 		pass
 
