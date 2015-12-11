@@ -138,9 +138,10 @@ def test_example(cv_image, message, jointModelObject, print_message):
 # Active Learning.
 def learn_example(cv_image, message, msg_id, al_framework, print_message, 
                   ask_question, end_exchange):
+    print("Message ID: " + str(msg_id))
     print_message("Asking Question....")
     [msg_id, msg_str] = al_framework.add_word_example_pair(msg_id, cv_image, message)
-    if msg_id = 6:
+    if msg_id == 6:
         print_message("End Conversation....")
         print_message(msg_str)
         end_exchange(msg_str)
@@ -149,10 +150,12 @@ def learn_example(cv_image, message, msg_id, al_framework, print_message,
     
 # This function is to start the conversation with the Robot while using Active Learning.
 def start_conversation(cv_image, message, al_framework, print_message, ask_question, end_exchange):
+    print("Message ID: " + str(msg_id))
+    print_message("Asking Question....")
     print("Starting a Conversation....")
     print_message("Starting a Conversation....")
     [msg_id, msg_str] = al_framework.add_word_example_pair(0, cv_image, "")
-    if msg_id = 6:
+    if msg_id == 6:
         print_message("End Conversation....")
         print_message(msg_str)
         end_exchange(msg_str)
