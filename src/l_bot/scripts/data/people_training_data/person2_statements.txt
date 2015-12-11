@@ -110,3 +110,18 @@ Message: a green wedge placed on it's longer base
 Message: a red apple placed on it's tip
 Message: blue rectangluar plank again
 Message:
+
+*************************************************************************************
+Person 7
+Message: A soft edged cube from a birds eye perspective showing only 2 sides
+Message: A 3 dimensional rectangular prism from a birds eye perspective only showing two sides
+Message: A blue cyclinder from a birds eye view standing on one of its faces
+Message: An organic red sphere
+Message: A rectangular prism with a half of a circle cut out of ouf the center. The view conssits of birds eye perspective showing on two sides
+Message: A right sided rectangular prisim taken from a birds eye perspective, showing only two sides
+Message: Half of a cylinder split hoizontially down the center of one of the faces. It lies on its belly
+Message: A rectangular prisim from a birds eye view that shows 3 of its sides
+
+Tue Dec  8 20:59:09 2015
+
+21:02:44

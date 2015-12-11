@@ -72,7 +72,7 @@ def add_example(cv_image, message, jointModelObject, print_message, example_coun
     # Send ACK to output Node that the concept has been added.
     # Pickle the data to store training information.
     # Store size is the number of examples after which the model is stored to a pickle file.
-    store_size = 21
+    store_size = 8
     if ((example_count % store_size) == 0):
         with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
             pickle.dump(jointModelObject, handle)
