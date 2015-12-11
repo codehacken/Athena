@@ -13,6 +13,7 @@ from lib.node import RobotNode
 from lib.transport import Message
 from lib.alframework import ALUniRobotDrivenModel
 import pickle
+import sys
 
 class CpuNode(RobotNode):
     _input_node_id = 1
