@@ -405,12 +405,12 @@ class JointModel:
 				totalPositiveScore += maximumProbabilityScore
 		
 				# store the (first) classifier type for which the score is maximum
-				for(classifier in probabilityScores.keys()):
+				for classifier in probabilityScores.keys():
 					if(probabilityScores[classifier] == maximumProbabilityScore):
 						if("Color" in classifier._type_):
-							wordColorCount++
+							wordColorCount += 1
 						else:
-							wordShapeCount++
+							wordShapeCount += 1
 						break
 					
 			# process positive images
@@ -600,7 +600,7 @@ class JointModel:
 	'''
 	experiment: novel english
 	'''	
-	# TODO
+	# e.g. "this is a blue cube"
 	def classify_word(self, word):
 		pass
 
