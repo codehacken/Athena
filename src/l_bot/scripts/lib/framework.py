@@ -376,6 +376,8 @@ class JointModel:
 			# get all examples corresponding to this word
 			# it is stored in any non-synonym classifier
 			wordClassifier = ""
+			wordColorCount = 0
+			wordShapeCount = 0
 			
 			for classifier in self.knownWords[word]:
 				if("Synonym" not in str(type(classifier))):
@@ -393,7 +395,16 @@ class JointModel:
 				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example)		
 				maximumProbabilityScore = max(probabilityScores.values())
 				totalPositiveScore += maximumProbabilityScore
-
+		
+				# store the (first) classifier type for which the score is maximum
+				for(classifier in probabilityScores.keys()):
+					if(probabilityScores[classifier] == maximumProbabilityScore):
+						if("Color" in classifier._type_):
+							wordColorCount++
+						else:
+							wordShapeCount++
+						break
+					
 			# process positive images
 			totalNegativeScore = 0.0
 			for example in wordNegativeExamples:
@@ -412,7 +423,14 @@ class JointModel:
 			if(len(wordNegativeExamples) > 0):
 				totalScore -= totalNegativeScore/len(wordNegativeExamples)
 			
-			probabilityScores[word] = totalScore		
+			# assign final shape
+			classifierType = ""
+			if(wordColorCount > wordShapeCount):
+				classifierType = "Color"
+			else:
+				classifierType = "Shape"
+			
+			probabilityScores[word] = [totalScore, classifierType]		
 
 		# return dictionary of known words
 		return probabilityScores
