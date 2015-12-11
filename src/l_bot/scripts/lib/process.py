@@ -143,8 +143,8 @@ def learn_example(cv_image, message, msg_id, al_framework, print_message,
         # After n conversations save the joint model.
         store_size = 2
         if ((example_count % store_size) == 0):
-        with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
-            pickle.dump(jointModelObject, handle)
+            with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
+                pickle.dump(jointModelObject, handle)
     else:
         ask_question(msg_id, msg_str)
     
@@ -163,7 +163,7 @@ def start_conversation(cv_image, message, al_framework, print_message, ask_quest
         # After n conversations save the joint model.
         store_size = 2
         if ((example_count % store_size) == 0):
-        with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
-            pickle.dump(jointModelObject, handle)
+            with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
+                pickle.dump(jointModelObject, handle)
     else:
         ask_question(msg_id, msg_str)
