@@ -8,9 +8,17 @@ This code is extended/modified from Joint Architecture developed by Karan Budhra
 __author__      = "Nisha Pillai"
 __email__       = "npillai1@umbc.edu"
 
+# Image processing Lib.
+from lib.image.common import utils
+from lib.image.color import detectColor as dc
+from lib.image.shape import shapeUtils as su
+
 from framework import JointModel as jm
 from framework import ObjSynonymColor as ObjColor
 from framework import ObjSynonymShape as ObjShape
+
+# import language processing library
+from lib.lang.nlp import LanguageModule as lm
 
 # JointModel constants
 JM_GUESS_SCORE_THRESHOLD = 0.8
@@ -148,7 +156,7 @@ class ALUniRobotDrivenModel:
            self.wordRemovalfromQuestCandidates(word2)
 
 
-
+        
 
         # add a word-example pair to the model
         # word: string
@@ -220,6 +228,36 @@ class ALUniRobotDrivenModel:
 
                 return [self.questionFlag,sentenceInReturn]
 
+
+        # This function processes the image received from the kinect.
+        @staticmethod
+        def processImage(self, cv_image):
+            image = cv_image
+
+            # extract color and shape of image
+            # image_copy = copy.copy(image)
+            cnt = utils.objectIdentification(cv_image)
+            [x, y, w, h] = utils.boundingRectangle(cnt)
+            pixNp = dc.findAllPixels(image, cnt, x, y, w, h)
+            pixNp = dc.findUniquePixels(pixNp)
+
+            # store image data as dictionary
+            imageData = {'color': pixNp, 'shape': cnt}
+            print("Printing the size of RGB value " + str(len(pixNp)))
+            
+            # Return the image information.
+            return imageData
+
+        
+        # This function processes the language from the 
+        @staticmethod
+        def processLanguage(self, message):
+            # extract keywords from message
+            languageObject = lm(message)
+            [positiveLanguageData, negativeLanguageData] = languageObject.process_content()
+
+            # Return the list of words processed.
+            return [positiveLanguageData, negativeLanguageData]
 
 '''
 main function
