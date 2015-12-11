@@ -143,22 +143,18 @@ class ObjWord:
 		# add additional negative examples if any
 		negativeExamples = self.negativeExamples + additionalNegatveExamples
 	
-		# filter duplicated in examples
+		# filter duplicates in examples
 		seenExamples = []
 		for positiveExample in positiveExamples:
 			if(positiveExample not in seenExamples):
 				seenExamples.append(positiveExample)
 		positiveExamples = seenExamples
 			
-		'''
-		examplesAsStrings = list(set(map(lambda x: str(x), positiveExamples)))
-		filteredPositiveExamples = map(lambda x: eval(x), examplesAsStrings)
-		positiveExamples = filteredPositiveExamples
-
-		examplesAsStrings = set(map(lambda x: str(x), negativeExamples))
-		filteredNegativeExamples = map(lambda x: eval(x), examplesAsStrings)
-		negativeExamples = filteredNegativeExamples
-		'''
+		seenExamples = []
+		for negativeExample in negativeExamples:
+			if(negativeExample not in seenExamples):
+				seenExamples.append(negativeExample)
+		negativeExamples = seenExamples
 		
 		# check against this classifier
 		correctExamples = 0
