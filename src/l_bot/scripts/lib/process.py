@@ -72,7 +72,7 @@ def add_example(cv_image, message, jointModelObject, print_message, example_coun
     # Send ACK to output Node that the concept has been added.
     # Pickle the data to store training information.
     # Store size is the number of examples after which the model is stored to a pickle file.
-    store_size = 8
+    store_size = 2
     if ((example_count % store_size) == 0):
         with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
             pickle.dump(jointModelObject, handle)
@@ -119,7 +119,7 @@ def test_example(cv_image, message, jointModelObject, print_message):
     idx = 0
     for wordScore in sorted(wordScoreDictionary.keys(),reverse=True):
         for word in wordScoreDictionary[wordScore]:
-            print_message(str(++idx) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][0]) + ")")
+            print_message(str(++idx) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][2]) + ")")
 
     # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
     '''
