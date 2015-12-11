@@ -596,9 +596,41 @@ class JointModel:
 	'''
 	experiment: novel english
 	'''	
+	# get a sentence and an image
+	# compute a score which represents association of words with that image
+	# classify that image and get words associated with it in decending order
+	# get ranks of word mentioned by user
+	# score is sum of 1/rank for each word
 	# e.g. "this is a blue cube"
-	def classify_word(self, word):
-		pass
+	def associate_words_example(self, listOfWords, example):
+		
+		# classify this image and get associated words
+		[isConfidentGuess, bestGuessWord, bestGuessObj, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores] = self.classify_example(example)
+
+		# form a dictionary of score: word
+		wordScoreDictionary = {}
+		for word in wordMaxProabilityScores:
+			if(wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]] not in wordScoreDictionary.keys()):
+			    wordScoreDictionary[wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]] = [word]
+			else:
+			    wordScoreDictionary[wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]].append(word)
+
+		# now rank these in descending order
+		rank = 0
+		wordRanks = {}
+		for wordScore in sorted(wordScoreDictionary.keys(),reverse=True):
+			rank += 1
+			for word in wordScoreDictionary[wordScore]:
+			    wordRank[word] = rank
+
+		# compute total score based on ranks of words in list
+		totalScore = 0
+		for word in listOfWords:
+			rank = wordRank[word]
+			# use flat division for float result
+			totalScore += 1.0/rank
+
+		return totalScore
 
 '''
 main function
