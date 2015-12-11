@@ -150,7 +150,6 @@ def learn_example(cv_image, message, msg_id, al_framework, print_message,
     
 # This function is to start the conversation with the Robot while using Active Learning.
 def start_conversation(cv_image, message, al_framework, print_message, ask_question, end_exchange):
-    print("Message ID: " + str(msg_id))
     print_message("Asking Question....")
     print("Starting a Conversation....")
     print_message("Starting a Conversation....")
