@@ -110,23 +110,17 @@ def test_example(cv_image, message, jointModelObject, print_message):
     # form a dictionary of score: word
     wordScoreDictionary = {}
     for word in wordMaxProabilityScores:
-        if(wordMaxProabilityScores[word][0] not in wordScoreDictionary.keys()):
-            wordScoreDictionary[wordMaxProabilityScores[word][0]] = [word]
+        if(wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]] not in wordScoreDictionary.keys()):
+            wordScoreDictionary[wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]] = [word]
         else:
-            wordScoreDictionary[wordMaxProabilityScores[word][0]].append(word)
+            wordScoreDictionary[wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]].append(word)
 
     # now print these in ascending order
     idx = 0
     for wordScore in sorted(wordScoreDictionary.keys(),reverse=True):
         for word in wordScoreDictionary[wordScore]:
-            print_message(str(++idx) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][2]) + ")")
+            print_message(str(++idx) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]) + ")")
 
-    # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
-    '''
-    for idx, word in enumerate(wordMaxProabilityScores):
-        print_message(str(idx+1) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][0]) + ")")
-    '''
-    
     # print new line for cleanliness
     print_message(" ")
 
@@ -138,9 +132,10 @@ def test_example(cv_image, message, jointModelObject, print_message):
 # Active Learning.
 def learn_example(cv_image, message, msg_id, al_framework, print_message, 
                   ask_question, end_exchange):
+    print("Message ID: " + str(msg_id))
     print_message("Asking Question....")
     [msg_id, msg_str] = al_framework.add_word_example_pair(msg_id, cv_image, message)
-    if msg_id = 6:
+    if msg_id == 6:
         print_message("End Conversation....")
         print_message(msg_str)
         end_exchange(msg_str)
@@ -149,10 +144,11 @@ def learn_example(cv_image, message, msg_id, al_framework, print_message,
     
 # This function is to start the conversation with the Robot while using Active Learning.
 def start_conversation(cv_image, message, al_framework, print_message, ask_question, end_exchange):
+    print_message("Asking Question....")
     print("Starting a Conversation....")
     print_message("Starting a Conversation....")
     [msg_id, msg_str] = al_framework.add_word_example_pair(0, cv_image, "")
-    if msg_id = 6:
+    if msg_id == 6:
         print_message("End Conversation....")
         print_message(msg_str)
         end_exchange(msg_str)

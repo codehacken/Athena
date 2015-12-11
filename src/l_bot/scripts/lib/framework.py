@@ -174,7 +174,7 @@ class ObjWord:
 		#probabilityScore = pExampleGivenWord
 
 		# return the score
-		return probabilityScore
+		return [probabilityScore, pExampleGivenWord]
 
 '''
 initialization: each word may correspond to a color, shape or synonym
@@ -380,14 +380,14 @@ class JointModel:
 			# process positive images
 			totalPositiveScore = 0.0
 			for example in wordPositiveExamples:
-				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
+				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example)		
 				maximumProbabilityScore = max(probabilityScores.values())
 				totalPositiveScore += maximumProbabilityScore
 
 			# process positive images
 			totalNegativeScore = 0.0
 			for example in wordNegativeExamples:
-				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
+				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example)		
 				maximumProbabilityScore = min(probabilityScores.values())
 				totalNegativeScore += maximumProbabilityScore
 
@@ -451,13 +451,14 @@ class JointModel:
 	def classify_word_example(self, word, example):
 
 		probabilityScores = {}
+		pExampleGivenWordValues = {}
 
 		# check all classifiers related to this word
 		for classifier in self.knownWords[word]:
 			print(word, str(classifier))
 			if("Synonym" not in str(type(classifier))):
 				# use non-synonym classifiers directly
-				probabilityScore = classifier.calculate_probability_score(example)
+				[probabilityScore, pExampleGivenWord] = classifier.calculate_probability_score(example)
 			else:
 				# use synonym classifiers indirectly
 				# add positive and negative examples known for the word but not the synonym
@@ -479,10 +480,11 @@ class JointModel:
 						synonymClassifierObj = synonymClassifier
 						break;
 
-				probabilityScore = synonymClassifierObj.calculate_probability_score(example, classifier.positiveExamples, classifier.negativeExamples)
+				[probabilityScore, pExampleGivenWord] = synonymClassifierObj.calculate_probability_score(example, classifier.positiveExamples, classifier.negativeExamples)
 
 			# add score to classification scores
 			probabilityScores[classifier] = probabilityScore
+			pExampleGivenWordValues[classifier] = pExampleGivenWord
 
 		# now we have accumulated all the scores
 		# check if any of the scores exceed the threshold
@@ -495,7 +497,7 @@ class JointModel:
 			isWordExampleConsistent = isWordExampleConsistent or (probabilityScores[classifier] >= classifier.get_classification_threshold())
 
 		# return the consistency decision and probability scores
-		return [isWordExampleConsistent, probabilityScores]
+		return [isWordExampleConsistent, probabilityScores, pExampleGivenWordValues]
 
 	'''
 	experiment: novel scene
@@ -527,7 +529,7 @@ class JointModel:
 		# calculate word probability scores
 		# check all associated classifiers
 		for word in self.knownWords.keys():
-			[isWordExampleConsistent, probabilityScores] = self.classify_word_example(word, example)
+			[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example)
 
 			# select maximum score corresponding to best interpretation			
 			maxScore = max(probabilityScores.values())			
@@ -538,8 +540,9 @@ class JointModel:
 					maxScoreObj = classifier
 
 			# add to probability scores
-			totalObjExamples = float(len(maxScoreObj.positiveExamples) + len(maxScoreObj.negativeExamples))
-			wordMaxProabilityScores[word] = [maxScore, maxScoreObj, maxScore/totalObjExamples]
+			#totalObjExamples = float(len(maxScoreObj.positiveExamples) + len(maxScoreObj.negativeExamples))
+			#wordMaxProabilityScores[word] = [maxScore, maxScoreObj, maxScore/totalObjExamples]
+			wordMaxProabilityScores[word] = [maxScore, maxScoreObj, pExampleGivenWordValues]
 			wordProbabilityScores[word] = [isWordExampleConsistent, probabilityScores]
 
 			# update best guess if possible

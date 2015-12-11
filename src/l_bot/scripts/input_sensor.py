@@ -38,11 +38,10 @@ class InputNode(RobotNode):
     # Send a 0 to start a conversation.
     def send_start_exchange(self):
         msg = Message(self._t_layer._id, self._cpu_id, 'learn',
-                      0, msg_str)
+                      0, "")
         self.send_message(msg)
 
     def recv_learn_example(self, message):
-        print(message.message)
         self._msg_state = message.type
 
     # This is to reset the conversation when end exchange message is received.
