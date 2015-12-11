@@ -110,10 +110,10 @@ def test_example(cv_image, message, jointModelObject, print_message):
     # form a dictionary of score: word
     wordScoreDictionary = {}
     for word in wordMaxProabilityScores:
-        if(wordMaxProabilityScores[word][0] not in wordScoreDictionary.keys()):
-            wordScoreDictionary[wordMaxProabilityScores[word][0]] = [word]
+        if(wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]] not in wordScoreDictionary.keys()):
+            wordScoreDictionary[wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]] = [word]
         else:
-            wordScoreDictionary[wordMaxProabilityScores[word][0]].append(word)
+            wordScoreDictionary[wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]].append(word)
 
     # now print these in ascending order
     idx = 0
@@ -121,12 +121,6 @@ def test_example(cv_image, message, jointModelObject, print_message):
         for word in wordScoreDictionary[wordScore]:
             print_message(str(++idx) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]) + ")")
 
-    # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
-    '''
-    for idx, word in enumerate(wordMaxProabilityScores):
-        print_message(str(idx+1) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][0]) + ")")
-    '''
-    
     # print new line for cleanliness
     print_message(" ")
 
