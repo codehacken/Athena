@@ -380,14 +380,14 @@ class JointModel:
 			# process positive images
 			totalPositiveScore = 0.0
 			for example in wordPositiveExamples:
-				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
+				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example)		
 				maximumProbabilityScore = max(probabilityScores.values())
 				totalPositiveScore += maximumProbabilityScore
 
 			# process positive images
 			totalNegativeScore = 0.0
 			for example in wordNegativeExamples:
-				[isWordExampleConsistent, probabilityScores] = classify_word_example(word, example)		
+				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example)		
 				maximumProbabilityScore = min(probabilityScores.values())
 				totalNegativeScore += maximumProbabilityScore
 
