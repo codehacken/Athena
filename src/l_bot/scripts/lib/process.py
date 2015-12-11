@@ -109,7 +109,7 @@ def test_example(cv_image, message, jointModelObject, print_message):
 
     # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
     for idx, word in enumerate(wordMaxProabilityScores):
-        print_message(str(idx+1) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][0]) + ")")
+        print_message(str(idx+1) + " " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]))
 
     # print new line for cleanliness
     print_message(" ")
