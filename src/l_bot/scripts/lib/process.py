@@ -119,7 +119,7 @@ def test_example(cv_image, message, jointModelObject, print_message):
     idx = 0
     for wordScore in sorted(wordScoreDictionary.keys(),reverse=True):
         for word in wordScoreDictionary[wordScore]:
-            print_message(str(++idx) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][2]) + ")")
+            print_message(str(++idx) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]) + ")")
 
     # use wordMaxProabilityScores, bestGuessWord and maxScoreObj
     '''
