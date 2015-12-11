@@ -11,6 +11,7 @@ from abc import ABCMeta
 from abc import abstractmethod
 from lib.image.color import detectColor as dc
 from lib.image.shape import shapeUtils as su
+import sets
 
 # ObjWord constants
 # possible example polarities
@@ -141,6 +142,15 @@ class ObjWord:
 	
 		# add additional negative examples if any
 		negativeExamples = self.negativeExamples + additionalNegatveExamples
+	
+		# filter duplicated in examples
+		examplesAsStrings = list(set(map(lambda x: str(x), positiveExamples)))
+		filteredPositiveExamples = map(lambda x: eval(x), examplesAsStrings)
+		positiveExamples = filteredPositiveExamples
+
+		examplesAsStrings = set(map(lambda x: str(x), negativeExamples))
+		filteredNegativeExamples = map(lambda x: eval(x), examplesAsStrings)
+		negativeExamples = filteredNegativeExamples
 
 		# check against this classifier
 		correctExamples = 0
