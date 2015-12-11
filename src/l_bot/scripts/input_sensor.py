@@ -62,7 +62,7 @@ class InputNode(RobotNode):
                 self.send_test()
             elif (user_input == "train"):
                 self.send_train()
-            elif (self._msg_state == 0):
+            elif (self._msg_state == act_pass['active'] and self._train_mode == True):
                 self.send_start_exchange()
             else:
                 # Check for train or test mode.
