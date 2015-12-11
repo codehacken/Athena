@@ -80,7 +80,8 @@ class CpuNode(RobotNode):
         if self._train_mode == True:
             learn_example(self._ic.get_image(), message.message, message.type, self.al_framework,
                           self.send_print_message_to_op, self.send_learn_example, 
-                          self.send_end_exchange)
+                          self.send_end_exchange, self._examples_added)
+            self._examples_added += 1
         else:
             msg_str = "Robot is in test mode, switch to training mode to add more examples."
             self.send_print_message_to_op(msg_str)
@@ -92,8 +93,15 @@ class CpuNode(RobotNode):
         if self._train_mode == True:
             start_conversation(self._ic.get_image(), message.message, self.al_framework,
                           self.send_print_message_to_op, self.send_learn_example,
-                          self.send_end_exchange)
+                          self.send_end_exchange, self._examples_added)
+            self._examples_added += 1
         else:
             msg_str = "Robot is in test mode, switch to training mode to add more examples."
             self.send_print_message_to_op(msg_str)
-
+    
+    # Save the model on exit.
+    def recv_exit(self, message):
+        print("Node Exiting.....")
+        with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
+            pickle.dump(self._joint_model, handle)
+        sys.exit()
