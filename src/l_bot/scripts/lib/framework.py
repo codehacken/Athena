@@ -167,10 +167,10 @@ class ObjWord:
 		# consider non-normalized version of p(word) to calculate score
 		# probabilityScore = pExampleGivenWord*totalExamples cancels totalExamples
 		# so we can use just correctExamples
-		# probabilityScore = correctExamples
+		probabilityScore = correctExamples
 
 		# using pExampleGivenWord for now
-		probabilityScore = pExampleGivenWord
+		#probabilityScore = pExampleGivenWord
 
 		# return the score
 		return probabilityScore
@@ -537,7 +537,8 @@ class JointModel:
 					maxScoreObj = classifier
 
 			# add to probability scores
-			wordMaxProabilityScores[word] = [maxScore, maxScoreObj]
+			totalObjExamples = float(len(maxScoreObj.positiveExamples) + len(maxScoreObj.negativeExamples))
+			wordMaxProabilityScores[word] = [maxScore, maxScoreObj, maxScore/totalObjExamples]
 			wordProbabilityScores[word] = [isWordExampleConsistent, probabilityScores]
 
 			# update best guess if possible
