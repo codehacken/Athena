@@ -115,7 +115,7 @@ def test_example(cv_image, message, jointModelObject, print_message):
         else:
             wordScoreDictionary[wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]].append(word)
 
-    # now print these in ascending order
+    # now print these in descending order
     idx = 0
     for wordScore in sorted(wordScoreDictionary.keys(),reverse=True):
         for word in wordScoreDictionary[wordScore]:
