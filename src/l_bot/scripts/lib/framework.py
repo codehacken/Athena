@@ -396,7 +396,7 @@ class JointModel:
 			# process positive images
 			totalPositiveScore = 0.0
 			for example in wordPositiveExamples:
-				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example)		
+				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example, checkSynonyms=False)		
 				maximumProbabilityScore = max(probabilityScores.values())
 				totalPositiveScore += maximumProbabilityScore
 		
@@ -412,7 +412,7 @@ class JointModel:
 			# process positive images
 			totalNegativeScore = 0.0
 			for example in wordNegativeExamples:
-				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example)		
+				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example, checkSynonyms=False)		
 				maximumProbabilityScore = min(probabilityScores.values())
 				totalNegativeScore += maximumProbabilityScore
 
@@ -491,7 +491,7 @@ class JointModel:
 			if("Synonym" not in str(type(classifier))):
 				# use non-synonym classifiers directly
 				[probabilityScore, pExampleGivenWord] = classifier.calculate_probability_score(example)
-			else if(checkSynonyms == True):
+			elif(checkSynonyms == True):
 				# use synonym classifiers indirectly
 				# add positive and negative examples known for the word but not the synonym
 				# we do not care about the return values for recursive calls
