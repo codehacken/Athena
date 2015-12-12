@@ -372,7 +372,7 @@ class JointModel:
 	# return known words for evaluating classifiers
 	def get_known_words(self):
 
-		probabilityScores = {}
+		knownWordsProbabilityScores = {}
 
 		# for each word, compute a score
 		for word in self.knownWords:
@@ -434,10 +434,10 @@ class JointModel:
 			else:
 				classifierType = "Shape"
 			
-			probabilityScores[word] = [totalScore, classifierType]		
+			knownWordsProbabilityScores[word] = [totalScore, classifierType]		
 
 		# return dictionary of known words
-		return probabilityScores
+		return knownWordsProbabilityScores
 
 	# add a word-example pair to the model
 	# word: string
