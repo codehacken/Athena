@@ -23,10 +23,11 @@ from lib.lang.nlp import LanguageModule as lm
 # JointModel constants
 JM_GUESS_SCORE_THRESHOLD = 0.8
 
-BEST_SYN_SCORE = 0.7
+BEST_SYN_SCORE_COLOR = 0.4
+BEST_SYN_SCORE_SHAPE = 0.9
 BEST_SIM_SCORE = 0.95
-BEST_NEG_SYN_SCORE = 0.4
-LEAST_LOW_SCORE    = 0.3
+BEST_NEG_SYN_SCORE = 0.35
+LEAST_LOW_SCORE    = 0.25
 
 AL_QUESTIONNAIRE = {1 : "What is this?", 
                     2 : "Is this same as ", 
@@ -56,31 +57,40 @@ class ALUniRobotDrivenModel:
                 self.synCandidates = []
                 self.simCandidates = []
                 self.negSynCandidates = []
+                self.dissimilarCandidates = []
                 self.wordInQuestion = ""  
                 self.newWords = []
                 self.counter = 0  
                 self.lowConfCandidates = []
 
         def prepare_questions(self,example):
+           
            for word in self.jModel.knownWords.keys():
               [isWordExampleConsistent, probabilityScores,pExampleGivenWordValues] = self.jModel.classify_word_example(word, example)
-              for score in probabilityScores.values():
+              for (obj,score) in pExampleGivenWordValues.items():
+                 syn_core = BEST_SYN_SCORE_SHAPE
+                 if "Color" in str(type(obj)):
+                    syn_core = BEST_SYN_SCORE_COLOR
+                    
                  if score >= BEST_SIM_SCORE:
                     self.simCandidates.append(word)
-	         elif score >= BEST_SYN_SCORE:
+	         elif score >= syn_core:
                     self.synCandidates.append(word)
+                 elif score == 0.0:
+                    self.dissimilarCandidates.append(word)
                  elif score <= BEST_NEG_SYN_SCORE:
                     self.negSynCandidates.append(word)
            self.simCandidates = list(set(self.simCandidates))
            self.synCandidates = list(set(self.synCandidates))
            self.negSynCandidates = list(set(self.negSynCandidates))
-        
+           self.dissimilarCandidates = list(set(self.dissimilarCandidates))
+
         def prepareLowConfQuestions(self):
            self.lowConfCandidates = []
            probScores = self.jModel.get_known_words()
            totScore = 0.0
            lowScores = []
-           for word,score in probScores.items() :
+           for word,score,classType in probScores.items() :
               totScore += score
               if score < LEAST_LOW_SCORE :
                  lowScores.append(word)
@@ -106,6 +116,9 @@ class ALUniRobotDrivenModel:
            for word in words:
               self.jModel.add_word_example_pair(word, example, examplePolarity)
               self.wordRemovalfromQuestCandidates(word)
+              for word1 in self.dissimilarCandidates:
+                 self.wordSynAdd(word,word1,example,"-")
+                 self.wordSynAdd(word1,word,example,"-")
 
         def differentWordAdd(self,word2,example,examplePolarity) :
            self.jModel.add_word_example_pair(word2, example, examplePolarity)
@@ -144,7 +157,7 @@ class ALUniRobotDrivenModel:
            self.wordRemovalfromQuestCandidates(word2)
 
 
-        def wordNegExample(self,words,example,examplePolarity) :
+        def wordNegExample(self,words,example) :
            word = words[0]
            word = word.lower()
            examplePolarity = "-"
@@ -198,7 +211,7 @@ class ALUniRobotDrivenModel:
                 elif qType == 3 :
                    self.wordAddPosSynExample(words,example)
                 elif qType == 4 :
-                   self.wordNegExample(words,example,examplePolarity)
+                   self.wordNegExample(words,example)
                 elif qType == 5 :
                    if wordSize > 0 :
                       word = words[0]
@@ -253,7 +266,7 @@ class ALUniRobotDrivenModel:
 
             # store image data as dictionary
             imageData = {'color': pixNp, 'shape': cnt}
-            print("Printing the size of RGB value " + str(len(pixNp)))
+            print("Total RGB values : " + str(len(pixNp)))
             
             # Return the image information.
             return imageData

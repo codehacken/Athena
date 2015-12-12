@@ -36,11 +36,8 @@ def findContour(threshold):
 
 
 def selectContour(imageFile,contours):
-   print "Contours ",len(contours)
    my_list = []
    im = imageRead(imageFile)
-   print "Image Size ",im.size
-   print "Image Type ", im.shape
    for index in range(len(contours)) :
 #      print "Object ",index
 #      im = imageRead(imageFile)
@@ -56,14 +53,10 @@ def selectContour(imageFile,contours):
    list1 = my_list
   # print my_list
    fi = sorted(set(list1))[-1]
-   print fi
    index = my_list.index(fi)
    x,y,w,h = boundingRectangle(contours[index])
-   print x,y,w,h
    mi = sorted(set(list1))[-2]
-   print mi
    index = my_list.index(mi)
-   print index
    return index
 
    while True:
