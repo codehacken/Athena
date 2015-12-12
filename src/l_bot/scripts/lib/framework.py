@@ -602,7 +602,7 @@ class JointModel:
 	# get ranks of word mentioned by user
 	# score is sum of 1/rank for each word
 	# e.g. "this is a blue cube"
-	def associate_words_example(self, listOfWords, example):
+	def associate_words_example(self, listOfPositiveWords, listOfNegativeWords, example):
 		
 		# classify this image and get associated words
 		[isConfidentGuess, bestGuessWord, bestGuessObj, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores] = self.classify_example(example)
@@ -625,11 +625,17 @@ class JointModel:
 
 		# compute total score based on ranks of words in list
 		totalScore = 0
-		for word in listOfWords:
+		for word in listOfPositiveWords:
 			if(word in wordRanks):
 				rank = wordRanks[word]
 				# use flat division for float result
 				totalScore += 1.0/rank
+
+		for word in listOfNegativeWords:
+			if(word in wordRanks):
+				rank = wordRanks[word]
+				# use flat division for float result
+				totalScore -= 1.0/rank
 
 		return [totalScore, wordRanks]
 
