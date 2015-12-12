@@ -109,7 +109,7 @@ def test_example(cv_image, message, jointModelObject, print_message):
 
     print(ctime())
     # Now perform the test.
-    score, wordRanks = jointModelObject.associate_words_example(positiveLanguageData, imageData)
+    score, wordRanks = jointModelObject.associate_words_example(positiveLanguageData, negativeLanguageData, imageData)
     print_message("Score: " + str(score))
     print_message(str(wordRanks))
     print(ctime())
