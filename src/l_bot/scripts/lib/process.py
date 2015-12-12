@@ -103,29 +103,15 @@ def test_example(cv_image, message, jointModelObject, print_message):
     imageData = {'color': pixNp, 'shape': cnt}
     print("Printing the size of RGB value " + str(len(pixNp)))
 
+    # extract keywords from message
+    languageObject = lm(message)
+    [positiveLanguageData, negativeLanguageData] = languageObject.process_content()
+
     print(ctime())
-    # call novel scene
-    [isConfidentGuess, bestGuessWord, bestGuessObj, bestGuessMaxScore, wordMaxProabilityScores, wordProbabilityScores] = jointModelObject.classify_example(imageData)
-
-    # form a dictionary of score: word
-    wordScoreDictionary = {}
-    for word in wordMaxProabilityScores:
-        if(wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]] not in wordScoreDictionary.keys()):
-            wordScoreDictionary[wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]] = [word]
-        else:
-            wordScoreDictionary[wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]].append(word)
-
-    # now print these in descending order
-    idx = 0
-    for wordScore in sorted(wordScoreDictionary.keys(),reverse=True):
-        for word in wordScoreDictionary[wordScore]:
-            print_message(str(++idx) + ". " + wordMaxProabilityScores[word][1]._type_ + " " + word + " " + str(wordMaxProabilityScores[word][0]) + " (" + str(wordMaxProabilityScores[word][2][wordMaxProabilityScores[word][1]]) + ")")
-
-    # print new line for cleanliness
-    print_message(" ")
-
-    # print the conclusion
-    print_message("This is the " + bestGuessObj._type_ + " " + bestGuessWord)
+    # Now perform the test.
+    score, wordRanks = jointModelObject.associate_words_example(positiveLanguageData, imageData)
+    print_message("Score: " + str(score))
+    print_message(wordRanks)
     print(ctime())
 
 # This function used to send questions for the user to answer while using
