@@ -626,9 +626,10 @@ class JointModel:
 		# compute total score based on ranks of words in list
 		totalScore = 0
 		for word in listOfWords:
-			rank = wordRanks[word]
-			# use flat division for float result
-			totalScore += 1.0/rank
+			if(word in wordRanks):
+				rank = wordRanks[word]
+				# use flat division for float result
+				totalScore += 1.0/rank
 
 		return [totalScore, wordRanks]
 
