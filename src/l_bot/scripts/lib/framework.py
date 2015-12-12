@@ -370,7 +370,7 @@ class JointModel:
 		self.minimumGuessScore = JM_GUESS_SCORE_THRESHOLD
 
 	# return known words for evaluating classifiers
-	def get_known_words(self):
+	def get_known_words(self, checkSynonyms=False):
 
 		knownWordsProbabilityScores = {}
 
@@ -396,7 +396,7 @@ class JointModel:
 			# process positive images
 			totalPositiveScore = 0.0
 			for example in wordPositiveExamples:
-				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example, checkSynonyms=False)		
+				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example, checkSynonyms)		
 				maximumProbabilityScore = max(probabilityScores.values())
 				totalPositiveScore += maximumProbabilityScore
 		
@@ -412,7 +412,7 @@ class JointModel:
 			# process positive images
 			totalNegativeScore = 0.0
 			for example in wordNegativeExamples:
-				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example, checkSynonyms=False)		
+				[isWordExampleConsistent, probabilityScores, pExampleGivenWordValues] = self.classify_word_example(word, example, checkSynonyms)		
 				maximumProbabilityScore = min(probabilityScores.values())
 				totalNegativeScore += maximumProbabilityScore
 
