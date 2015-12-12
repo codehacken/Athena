@@ -188,8 +188,8 @@ class ALUniRobotDrivenModel:
                 if qType == 0 :
                    self.counter = self.counter + 1
                    self.lowConfCandidates = []
-                   #if self.counter % 20 == 0 :
-                   self.prepareLowConfQuestions()
+                   if (self.counter % 19) == 0 :
+                      self.prepareLowConfQuestions()
                    #else :
                    #   self.lowConfCandidates = []
                    #self.prepare_questions(example)
