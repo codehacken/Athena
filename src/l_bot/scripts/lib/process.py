@@ -109,9 +109,10 @@ def test_example(cv_image, message, jointModelObject, print_message):
 
     print(ctime())
     # Now perform the test.
-    score, wordRanks = jointModelObject.associate_words_example(positiveLanguageData, negativeLanguageData, imageData)
-    print_message("Score: " + str(score))
+    [totalScore, wordRanks, wordScoreDictionary] = jointModelObject.associate_words_example(positiveLanguageData, negativeLanguageData, imageData)
+    print_message("Score: " + str(totalScore))
     print_message(str(wordRanks))
+    print_message(str(wordScoreDictionary))
     print(ctime())
 
 # This function used to send questions for the user to answer while using
