@@ -621,12 +621,12 @@ class JointModel:
 		for wordScore in sorted(wordScoreDictionary.keys(),reverse=True):
 			rank += 1
 			for word in wordScoreDictionary[wordScore]:
-			    wordRank[word] = rank
+			    wordRanks[word] = rank
 
 		# compute total score based on ranks of words in list
 		totalScore = 0
 		for word in listOfWords:
-			rank = wordRank[word]
+			rank = wordRanks[word]
 			# use flat division for float result
 			totalScore += 1.0/rank
 
