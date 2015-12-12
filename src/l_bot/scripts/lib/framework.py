@@ -93,7 +93,6 @@ class ObjWord:
 	# item 1: image corresponding to word
 	# item 2: image corresponding to word
 	def is_equal(self, item1, item2):
-                print "---->",self.get_duplicate_threshold()
 		if(self.compare_items(item1, item2) >= self.get_duplicate_threshold()):
 			return True		
 		else:
@@ -173,7 +172,7 @@ class ObjWord:
 				correctExamples += 1
 
 		# compute p(example|word)
-		print("correct examples: " + str(correctExamples))
+		#print("correct examples: " + str(correctExamples))
 		totalExamples = len(positiveExamples) + len(negativeExamples)
 		pExampleGivenWord = correctExamples/float(totalExamples)
 
@@ -487,7 +486,7 @@ class JointModel:
 
 		# check all classifiers related to this word
 		for classifier in self.knownWords[word]:
-			print(word, str(classifier))
+			#print(word, str(classifier))
 			if("Synonym" not in str(type(classifier))):
 				# use non-synonym classifiers directly
 				[probabilityScore, pExampleGivenWord] = classifier.calculate_probability_score(example)
