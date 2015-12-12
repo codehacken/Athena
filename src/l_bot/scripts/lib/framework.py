@@ -480,7 +480,7 @@ class JointModel:
 	# word: string
 	# example: image
 	# classificationScores: dictionary of classification scores per classifier
-	def classify_word_example(self, word, example):
+	def classify_word_example(self, word, example, checkSynonyms=True):
 
 		probabilityScores = {}
 		pExampleGivenWordValues = {}
@@ -491,7 +491,7 @@ class JointModel:
 			if("Synonym" not in str(type(classifier))):
 				# use non-synonym classifiers directly
 				[probabilityScore, pExampleGivenWord] = classifier.calculate_probability_score(example)
-			else:
+			else if(checkSynonyms == True):
 				# use synonym classifiers indirectly
 				# add positive and negative examples known for the word but not the synonym
 				# we do not care about the return values for recursive calls
@@ -513,6 +513,10 @@ class JointModel:
 						break;
 
 				[probabilityScore, pExampleGivenWord] = synonymClassifierObj.calculate_probability_score(example, classifier.positiveExamples, classifier.negativeExamples)
+			
+			else:
+				# do nothing about the synonyms
+				pass
 
 			# add score to classification scores
 			probabilityScores[classifier] = probabilityScore
