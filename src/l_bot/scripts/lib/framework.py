@@ -630,7 +630,7 @@ class JointModel:
 			# use flat division for float result
 			totalScore += 1.0/rank
 
-		return totalScore
+		return [totalScore, wordRanks]
 
 '''
 main function
