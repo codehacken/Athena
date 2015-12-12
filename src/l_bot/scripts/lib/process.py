@@ -72,7 +72,7 @@ def add_example(cv_image, message, jointModelObject, print_message, example_coun
     # Send ACK to output Node that the concept has been added.
     # Pickle the data to store training information.
     # Store size is the number of examples after which the model is stored to a pickle file.
-    store_size = 2
+    store_size = 20
     if ((example_count % store_size) == 0):
         with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
             pickle.dump(jointModelObject, handle)
@@ -128,7 +128,7 @@ def learn_example(cv_image, message, msg_id, al_framework, print_message,
         end_exchange(msg_str)
         
         # After n conversations save the joint model.
-        store_size = 2
+        store_size = 20
         if ((example_count % store_size) == 0):
             with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
                 pickle.dump(al_framework.jModel, handle)
@@ -148,7 +148,7 @@ def start_conversation(cv_image, message, al_framework, print_message, ask_quest
         end_exchange(msg_str)
         
         # After n conversations save the joint model.
-        store_size = 2
+        store_size = 20
         if ((example_count % store_size) == 0):
             with open('data/pickle/passive_jointModelObject.pickle', 'wb') as handle:
                 pickle.dump(al_framework.jModel, handle)
