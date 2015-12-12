@@ -31,8 +31,8 @@ LEAST_LOW_SCORE    = 0.25
 
 AL_QUESTIONNAIRE = {1 : "What is this?", 
                     2 : "Is this same as ", 
-                    3 : "Is this thing like ", 
-                    4 : "Is this totally different from ", 
+                    3 : "Is this thing similar to ", 
+                    4 : "Is this different from ", 
                     5 : "Can you show me a ",
                     6 : "Okay, You May Now Provide next Object..."}
 
@@ -88,16 +88,15 @@ class ALUniRobotDrivenModel:
         def prepareLowConfQuestions(self):
            self.lowConfCandidates = []
            probScores = self.jModel.get_known_words()
-           totScore = 0.0
-           lowScores = []
-           for word,score,classType in probScores.items() :
-              totScore += score
-              if score < LEAST_LOW_SCORE :
-                 lowScores.append(word)
-
-           avScore = float(totScore)/float(len(propScores))
-           if avScore > 0.5 :
-              self.lowConfCandidates = lowScores      
+           lowScore = 10000.0
+           wordQn = ""
+           for word,obj in probScores.items() :
+              score = obj[0]
+              if score < lowScore :
+                 wordQn = word
+                 lowScore = score
+           if len(probScores) > 0 :   
+              self.lowConfCandidates = [wordQn] 
      
 
         def arRemove(self,candidates,word):
@@ -188,10 +187,11 @@ class ALUniRobotDrivenModel:
                 self.questionFlag = 0
                 if qType == 0 :
                    self.counter = self.counter + 1
-                   if self.counter % 20 == 0 :
-                      self.prepareLowConfQuestions()
-                   else :
-                      self.lowConfCandidates = []
+                   self.lowConfCandidates = []
+                   #if self.counter % 20 == 0 :
+                   self.prepareLowConfQuestions()
+                   #else :
+                   #   self.lowConfCandidates = []
                    #self.prepare_questions(example)
                    self.questionFlag = 1
                    #if wordSize == 0 :
