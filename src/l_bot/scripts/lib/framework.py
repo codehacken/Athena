@@ -638,12 +638,3 @@ class JointModel:
 				totalScore -= 1.0/rank
 
 		return [totalScore, wordRanks]
-
-'''
-main function
-'''
-def main():
-	
-	pass
-
-main()
