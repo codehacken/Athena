@@ -40,6 +40,10 @@ class LanguageModule:
          for i in self.tokenized[:5]:
              words = nltk.word_tokenize(i)
              tagged = nltk.pos_tag(words)
+             if(len(tagged)==1):
+             	positive_examples=tagged[0][0]
+             	return_data=[positive_examples,negative_examples]
+             	return return_data
        #      print tagged
              for rule in RuleList:
 	         parser=nltk.RegexpParser(rule)
