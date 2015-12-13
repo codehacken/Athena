@@ -66,7 +66,7 @@ class ALUniRobotDrivenModel:
         def prepare_questions(self,example):
            
            for word in self.jModel.knownWords.keys():
-              [isWordExampleConsistent, probabilityScores,pExampleGivenWordValues] = self.jModel.classify_word_example(word, example)
+              [isWordExampleConsistent, probabilityScores,pExampleGivenWordValues] = self.jModel.classify_word_example(word, example,False)
               for (obj,score) in pExampleGivenWordValues.items():
                  syn_core = BEST_SYN_SCORE_SHAPE
                  if "Color" in str(type(obj)):
