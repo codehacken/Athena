@@ -14,6 +14,7 @@ from lib.transport import Message
 from lib.alframework import ALUniRobotDrivenModel
 import pickle
 import sys
+import cv2
 
 # Shutdown.
 import rospy
@@ -47,9 +48,8 @@ class CpuNode(RobotNode):
         if self.test_image_list > 0
             if self.test_image_ctr > self.test_image_no:
                 self.test_image_ctr += 1
-                return self.test_image_list[self.test_image_ctr]
-            else:
-                return self.test_image_list[self.test_image_ctr]
+
+            return cv2.imread(self.test_image_list[self.test_image_ctr])
         else:
             print("No Images in the List")
             return None
