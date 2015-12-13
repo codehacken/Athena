@@ -47,7 +47,7 @@ Class Tlayer() requires the following parameters:
 """
 class TLayer(object):
     # Define the queue size for the publisher.
-    _queue_size = 10
+    _queue_size = 100
     _broadcast = -1
 
     def __init__(self, ID, topic_name, message_handler):

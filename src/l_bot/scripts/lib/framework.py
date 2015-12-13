@@ -172,6 +172,7 @@ class ObjWord:
 				correctExamples += 1
 
 		# compute p(example|word)
+		#print("correct examples: " + str(correctExamples))
 		totalExamples = len(positiveExamples) + len(negativeExamples)
 		pExampleGivenWord = correctExamples/float(totalExamples)
 
@@ -485,6 +486,7 @@ class JointModel:
 
 		# check all classifiers related to this word
 		for classifier in self.knownWords[word]:
+			#print(word, str(classifier))
 			if("Synonym" not in str(type(classifier))):
 				# use non-synonym classifiers directly
 				[probabilityScore, pExampleGivenWord] = classifier.calculate_probability_score(example)
