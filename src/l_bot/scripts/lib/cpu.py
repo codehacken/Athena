@@ -37,7 +37,23 @@ class CpuNode(RobotNode):
         # or not. Initialize the ALFramework here.
         self.al_framework = ALUniRobotDrivenModel(self._joint_model)
         self._examples_added = 1
+        
+        # List of images files.
+        self.test_image_list = []
+        self.test_image_no = len(self.test_image_list)
+        self.test_image_ctr = -1
 
+    def get_test_image():
+        if self.test_image_list > 0
+            if self.test_image_ctr > self.test_image_no:
+                self.test_image_ctr += 1
+                return self.test_image_list[self.test_image_ctr]
+            else:
+                return self.test_image_list[self.test_image_ctr]
+        else:
+            print("No Images in the List")
+            return None
+        
     def send_print_message_to_op(self, msg_str):
         self.send_print_message(CpuNode._output_node_id, msg_str)
 
@@ -73,7 +89,7 @@ class CpuNode(RobotNode):
         # Perform a test on the image.
         # The input string from the user is not used.
         if self._train_mode == False:
-            test_example(self._ic.get_image(), message.message, self._joint_model,
+            test_example(self.get_test_image(), message.message, self._joint_model,
                          self.send_print_message_to_op)
         else:
             msg_str = "Robot is in training mode, switch to test mode to validate."
